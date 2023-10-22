@@ -1,4 +1,4 @@
-package com.example.bbca
+package ru.mtuci.bbca
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

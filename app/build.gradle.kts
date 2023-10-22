@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.bbca"
+    namespace = "ru.mtuci.bbca"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.bbca"
+        applicationId = "ru.mtuci.bbca"
         minSdk = 26
         targetSdk = 33
         versionCode = 1

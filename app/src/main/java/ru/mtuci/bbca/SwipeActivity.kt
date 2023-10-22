@@ -1,26 +1,24 @@
-package com.example.bbca
+package ru.mtuci.bbca
 
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.EditText
+import android.view.MotionEvent
 import android.widget.TextView
-import androidx.core.widget.doOnTextChanged
-import org.json.JSONArray
-import org.json.JSONObject
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.widget.ViewPager2
 import java.io.File
 import java.io.FileOutputStream
 
-class KeyStrokeActivity : AppCompatActivity(), SensorEventListener {
+class SwipeActivity : FragmentActivity(), SensorEventListener {
     private lateinit var currentSessionPath: String
     private lateinit var sessionSensorsPath: String
-    private lateinit var textViewKeystroke: TextView
+    private lateinit var textViewTouch: TextView
+    private lateinit var swipeFileOutput: FileOutputStream
     private lateinit var sensorManager: SensorManager
-    private lateinit var keystrokeFileOutput: FileOutputStream
     private lateinit var accFileOutput: FileOutputStream
     private lateinit var gyroFileOutput: FileOutputStream
     private lateinit var gravFileOutput: FileOutputStream
@@ -34,14 +32,15 @@ class KeyStrokeActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_key_stroke)
+        setContentView(R.layout.activity_swipe)
+        textViewTouch = findViewById(R.id.textViewTouch)
         // Set path, create dir and create data file
-        currentSessionPath = intent.getStringExtra("currentSessionPath").toString() + File.separator + "keystroke" + File.separator
+        currentSessionPath = intent.getStringExtra("currentSessionPath").toString() + File.separator + "swipe" + File.separator
         File(currentSessionPath).mkdir()
         // Set path and create sensors dir
         sessionSensorsPath = currentSessionPath + "sensors" + File.separator
         File(sessionSensorsPath).mkdir()
-        FileOutputStream(currentSessionPath + "keystroke.csv").apply { write("timestamp,orientation,ascii,letter\n".toByteArray()) }
+        FileOutputStream(currentSessionPath + "swipe.csv").apply { write("timestamp,orientation,x_coordinate,y_coordinate,pressure,action\n".toByteArray()) }
         FileOutputStream(sessionSensorsPath + Sensors.ACC.fileName).apply { write("timestamp,orientation,x_axis,y_axis,z_axis\n".toByteArray()) }
         FileOutputStream(sessionSensorsPath + Sensors.GYRO.fileName).apply { write("timestamp,orientation,x_axis,y_axis,z_axis\n".toByteArray()) }
         FileOutputStream(sessionSensorsPath + Sensors.GRAV.fileName).apply { write("timestamp,orientation,x_axis,y_axis,z_axis\n".toByteArray()) }
@@ -52,15 +51,26 @@ class KeyStrokeActivity : AppCompatActivity(), SensorEventListener {
         FileOutputStream(sessionSensorsPath + Sensors.TEMP.fileName).apply { write("timestamp,orientation,sensor_data\n".toByteArray()) }
         FileOutputStream(sessionSensorsPath + Sensors.PRES.fileName).apply { write("timestamp,orientation,sensor_data\n".toByteArray()) }
         FileOutputStream(sessionSensorsPath + Sensors.HUM.fileName).apply { write("timestamp,orientation,sensor_data\n".toByteArray()) }
-        textViewKeystroke = findViewById(R.id.textViewKeystroke)
-        textViewKeystroke.text = "${getString(R.string.keystroke_task_text)} 100"
 
-        findViewById<EditText>(R.id.editTextKeystroke).doOnTextChanged { text, start, before, count ->
-            textViewKeystroke.text = "${getString(R.string.keystroke_task_text)} ${if(100 - text?.length!! >= 0) 100 - text?.length!! else 0}"
-            if (before == 1) keystrokeFileOutput.write("${System.currentTimeMillis()},${resources.configuration.orientation},8,del\n".toByteArray())
-            if (count == 1) keystrokeFileOutput.write("${System.currentTimeMillis()},${resources.configuration.orientation},${text.last().code},${text.last()}\n".toByteArray())
+        val ranInts = generateSequence { (0..941).random() }.distinct().take(50).toSet().toIntArray()
+        val adapter = NumberAdapter(this, ranInts)
+        val viewPager: ViewPager2 = findViewById(R.id.viewPager)
+        viewPager.adapter = adapter
+        viewPager.getChildAt(0).setOnTouchListener { v, event ->
+            when (event?.actionMasked) {
+                MotionEvent.ACTION_DOWN -> swipeFileOutput.write("${System.currentTimeMillis()},${resources.configuration.orientation},${event.x},${event.y},${event.pressure},${event.action}\n".toByteArray())
+                MotionEvent.ACTION_MOVE -> {
+                    swipeFileOutput.write("${System.currentTimeMillis()},${resources.configuration.orientation},${event.x},${event.y},${event.pressure},${event.action}\n".toByteArray())
+                    textViewTouch.text ="X: %.3f ".format(event?.x) + "Y: %.3f ".format(event?.y) + "P: %.3f".format(event?.pressure)
+                }
+                MotionEvent.ACTION_UP -> {
+                    swipeFileOutput.write("${System.currentTimeMillis()},${resources.configuration.orientation},${event.x},${event.y},${event.pressure},${event.action}\n".toByteArray())
+                    textViewTouch.text = ""
+                }
+            }
+            v?.performClick() ?: true
         }
- 
+
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
     }
 
@@ -82,7 +92,7 @@ class KeyStrokeActivity : AppCompatActivity(), SensorEventListener {
         presFileOutput = FileOutputStream(sessionSensorsPath + Sensors.PRES.fileName, true)
         humFileOutput = FileOutputStream(sessionSensorsPath + Sensors.HUM.fileName, true)
 
-        keystrokeFileOutput = FileOutputStream(currentSessionPath + "keystroke.csv", true)
+        swipeFileOutput = FileOutputStream(currentSessionPath + "swipe.csv", true)
     }
 
     override fun onPause() {
@@ -102,7 +112,7 @@ class KeyStrokeActivity : AppCompatActivity(), SensorEventListener {
         presFileOutput.close()
         humFileOutput.close()
 
-        keystrokeFileOutput.close()
+        swipeFileOutput.close()
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
@@ -125,4 +135,5 @@ class KeyStrokeActivity : AppCompatActivity(), SensorEventListener {
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         // TODO("Not yet implemented")
     }
+
 }

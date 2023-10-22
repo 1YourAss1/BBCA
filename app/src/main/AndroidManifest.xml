@@ -13,19 +13,19 @@
         android:theme="@style/Theme.BBCA"
         tools:targetApi="31">
         <activity
-            android:name=".ScaleActivity"
+            android:name="ru.mtuci.bbca.ScaleActivity"
             android:exported="false" />
         <activity
-            android:name=".KeyStrokeActivity"
+            android:name="ru.mtuci.bbca.KeyStrokeActivity"
             android:exported="false" />
         <activity
-            android:name=".SwipeActivity"
+            android:name="ru.mtuci.bbca.SwipeActivity"
             android:exported="false" />
         <activity
-            android:name=".ScrollActivity"
+            android:name="ru.mtuci.bbca.ScrollActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name="ru.mtuci.bbca.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
