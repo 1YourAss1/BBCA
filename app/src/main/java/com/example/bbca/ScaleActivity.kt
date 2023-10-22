@@ -6,21 +6,19 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
-import android.text.method.ScrollingMovementMethod
 import android.view.MotionEvent
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import java.io.File
 import java.io.FileOutputStream
 
-
-class ScrollActivity : AppCompatActivity(), SensorEventListener {
+class ScaleActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var currentSessionPath: String
     private lateinit var sessionSensorsPath: String
-    private lateinit var textViewTouch: TextView
-    private lateinit var textViewToRead: TextView
+    private lateinit var imageView: ImageView
     private lateinit var sensorManager: SensorManager
-    private lateinit var scrollFileOutput: FileOutputStream
+    private lateinit var scaleFileOutput: FileOutputStream
     private lateinit var accFileOutput: FileOutputStream
     private lateinit var gyroFileOutput: FileOutputStream
     private lateinit var gravFileOutput: FileOutputStream
@@ -31,18 +29,18 @@ class ScrollActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var tempFileOutput: FileOutputStream
     private lateinit var presFileOutput: FileOutputStream
     private lateinit var humFileOutput: FileOutputStream
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_scroll)
-        textViewTouch = findViewById(R.id.textViewTouch)
+        setContentView(R.layout.activity_scale)
+        imageView = findViewById(R.id.zoomageView)
         // Set path, create dir and create data file
-        currentSessionPath = intent.getStringExtra("currentSessionPath").toString() + File.separator + "scroll" + File.separator
+        currentSessionPath = intent.getStringExtra("currentSessionPath")
+            .toString() + File.separator + "scale" + File.separator
         File(currentSessionPath).mkdir()
         // Set path and create sensors dir
         sessionSensorsPath = currentSessionPath + "sensors" + File.separator
         File(sessionSensorsPath).mkdir()
-        FileOutputStream(currentSessionPath + "scroll.csv").apply { write("timestamp,orientation,x_coordinate,y_coordinate,pressure,action\n".toByteArray()) }
+        FileOutputStream(currentSessionPath + "scale.csv").apply { write("timestamp,orientation,x1_coordinate,y1_coordinate,pressure1,x2_coordinate,y2_coordinate,pressure2,action_type\n".toByteArray()) }
         FileOutputStream(sessionSensorsPath + Sensors.ACC.fileName).apply { write("timestamp,orientation,x_axis,y_axis,z_axis\n".toByteArray()) }
         FileOutputStream(sessionSensorsPath + Sensors.GYRO.fileName).apply { write("timestamp,orientation,x_axis,y_axis,z_axis\n".toByteArray()) }
         FileOutputStream(sessionSensorsPath + Sensors.GRAV.fileName).apply { write("timestamp,orientation,x_axis,y_axis,z_axis\n".toByteArray()) }
@@ -54,24 +52,45 @@ class ScrollActivity : AppCompatActivity(), SensorEventListener {
         FileOutputStream(sessionSensorsPath + Sensors.PRES.fileName).apply { write("timestamp,orientation,sensor_data\n".toByteArray()) }
         FileOutputStream(sessionSensorsPath + Sensors.HUM.fileName).apply { write("timestamp,orientation,sensor_data\n".toByteArray()) }
 
-        textViewToRead = findViewById(R.id.textViewToRead)
-        textViewToRead.movementMethod = ScrollingMovementMethod()
-        textViewToRead.setOnTouchListener { v, event ->
+        val characterList: ArrayList<String> = arrayListOf("Волдо", "Бэтмен")
+        var currentCharacter = 0
+        var taskDone = false
+        findViewById<TextView>(R.id.textViewFindCharacter).apply {
+            text =
+                "${resources.getText(R.string.find_character)}: ${characterList[0]} ($currentCharacter/${characterList.size})"
+            setOnClickListener {
+                if (currentCharacter.inc() == characterList.size) taskDone = true
+                currentCharacter = currentCharacter.inc().mod(characterList.size)
+                text =
+                    "${resources.getText(R.string.find_character)}: ${characterList[currentCharacter]} (${if (!taskDone) currentCharacter else characterList.size}/${characterList.size})"
+            }
+        }
+
+        imageView.setOnTouchListener { v, event ->
             when (event?.actionMasked) {
-                MotionEvent.ACTION_DOWN -> scrollFileOutput.write("${System.currentTimeMillis()},${resources.configuration.orientation},${event.x},${event.y},${event.pressure},${event.action}\n".toByteArray())
-                MotionEvent.ACTION_MOVE -> {
-                    scrollFileOutput.write("${System.currentTimeMillis()},${resources.configuration.orientation},${event.x},${event.y},${event.pressure},${event.action}\n".toByteArray())
-                    textViewTouch.text ="X: %.3f ".format(event?.x) + "Y: %.3f ".format(event?.y) + "P: %.3f".format(event?.pressure)
+                MotionEvent.ACTION_POINTER_DOWN -> scaleFileOutput.write(
+                    ("${System.currentTimeMillis()},${resources.configuration.orientation}," +
+                            "${event.getX(0)},${event.getY(0)},${event.getPressure(0)}," +
+                            "${event.getX(1)},${event.getY(1)},${event.getPressure(1)},0\n").toByteArray()
+                )
+
+                MotionEvent.ACTION_MOVE -> if (event.pointerCount == 2) {
+                    scaleFileOutput.write(
+                        ("${System.currentTimeMillis()},${resources.configuration.orientation}," +
+                                "${event.getX(0)},${event.getY(0)},${event.getPressure(0)}," +
+                                "${event.getX(1)},${event.getY(1)},${event.getPressure(1)},2\n").toByteArray()
+                    )
                 }
-                MotionEvent.ACTION_UP -> {
-                    scrollFileOutput.write("${System.currentTimeMillis()},${resources.configuration.orientation},${event.x},${event.y},${event.pressure},${event.action}\n".toByteArray())
-                    textViewTouch.text = ""
-                }
+
+                MotionEvent.ACTION_POINTER_UP -> scaleFileOutput.write(
+                    ("${System.currentTimeMillis()},${resources.configuration.orientation}," +
+                            "${event.getX(0)},${event.getY(0)},${event.getPressure(0)}," +
+                            "${event.getX(1)},${event.getY(1)},${event.getPressure(1)},1\n").toByteArray()
+                )
 
             }
             v?.performClick() ?: true
         }
-
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
     }
 
@@ -93,7 +112,7 @@ class ScrollActivity : AppCompatActivity(), SensorEventListener {
         presFileOutput = FileOutputStream(sessionSensorsPath + Sensors.PRES.fileName, true)
         humFileOutput = FileOutputStream(sessionSensorsPath + Sensors.HUM.fileName, true)
 
-        scrollFileOutput = FileOutputStream(currentSessionPath + "scroll.csv", true)
+        scaleFileOutput = FileOutputStream(currentSessionPath + "scale.csv", true)
     }
 
     override fun onPause() {
@@ -113,7 +132,7 @@ class ScrollActivity : AppCompatActivity(), SensorEventListener {
         presFileOutput.close()
         humFileOutput.close()
 
-        scrollFileOutput.close()
+        scaleFileOutput.close()
     }
 
     override fun onSensorChanged(event: SensorEvent?) {

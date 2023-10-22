@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
             FileOutputStream(jsonInfoFile).write(jsonInfo.toString().toByteArray())
         }
         // Create dir for new session
-        if (File(currentSessionPath).listFiles()?.isNotEmpty() == true) {
+        if (File(currentSessionPath).listFiles()?.isNotEmpty() == true && File(currentSessionPath).listFiles().any { it.name.contains("session") }) {
             val newSession = "session${
                 File(currentSessionPath).listFiles()?.last { it.name.contains("session") }?.name?.filter { it.isDigit() }?.toInt()?.inc()}"
             if (File("$currentSessionPath/$newSession").mkdirs()) currentSessionPath = "$currentSessionPath/$newSession"
@@ -84,6 +84,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
         findViewById<Button>(R.id.buttonKeyStroke).setOnClickListener { startActivity(Intent(this, KeyStrokeActivity::class.java).putExtra("currentSessionPath", currentSessionPath)) }
         findViewById<Button>(R.id.buttonScroll).setOnClickListener { startActivity(Intent(this, ScrollActivity::class.java).putExtra("currentSessionPath", currentSessionPath)) }
         findViewById<Button>(R.id.buttonSwipe).setOnClickListener{ startActivity(Intent(this, SwipeActivity::class.java).putExtra("currentSessionPath", currentSessionPath)) }
+        findViewById<Button>(R.id.buttonScale).setOnClickListener{ startActivity(Intent(this, ScaleActivity::class.java).putExtra("currentSessionPath", currentSessionPath)) }
         // Set up textviews for debug
         textViewTouch = findViewById(R.id.textViewTouch)
         textViewAccelerometer = findViewById(R.id.textViewAccelerometer)
