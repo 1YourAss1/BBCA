@@ -22,7 +22,7 @@
             android:name="ru.mtuci.bbca.SwipeActivity"
             android:exported="false" />
         <activity
-            android:name="ru.mtuci.bbca.ScrollActivity"
+            android:name="ru.mtuci.bbca.scroll.ScrollActivity"
             android:exported="false" />
         <activity
             android:name="ru.mtuci.bbca.MainActivity"
