@@ -53,6 +53,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
                 put("width", resources.displayMetrics.widthPixels)
                 put("height", resources.displayMetrics.heightPixels)
             })
+            jsonInfo.put("device", JSONObject().apply {
+                put("android_version", android.os.Build.VERSION.SDK_INT)
+                put("device", android.os.Build.DEVICE)
+                put("model", android.os.Build.MODEL)
+                put("brand", android.os.Build.BRAND)
+                put("manufacturer", android.os.Build.MANUFACTURER)
+            })
             jsonInfo.put("sensors", JSONArray(sensorManager.getSensorList(Sensor.TYPE_ALL).map { sensor -> JSONObject("{\"name\": \"${sensor.name}\", \"vendor\": \"${sensor.vendor}\"}") }))
             FileOutputStream(jsonInfoFile).write(jsonInfo.toString().toByteArray())
         }
