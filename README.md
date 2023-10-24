@@ -7,6 +7,14 @@
 		"width":<value>,
 		"height":<value>
 	},
+"device": 
+	{
+		"android_version":<value>,
+		"device":<value>,
+		"model":<value>,
+		"brand":<value>,
+		"manufacturer":<value>
+	},
 "sensors":
 	[
 		{
