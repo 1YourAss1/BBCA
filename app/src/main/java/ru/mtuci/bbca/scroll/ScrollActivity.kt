@@ -1,4 +1,4 @@
-package ru.mtuci.bbca
+package ru.mtuci.bbca.scroll
 
 import android.content.Context
 import android.hardware.Sensor
@@ -9,7 +9,15 @@ import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.view.MotionEvent
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
+import ru.mtuci.bbca.R
+import ru.mtuci.bbca.Sensors
 import java.io.File
 import java.io.FileOutputStream
 
@@ -31,6 +39,8 @@ class ScrollActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var tempFileOutput: FileOutputStream
     private lateinit var presFileOutput: FileOutputStream
     private lateinit var humFileOutput: FileOutputStream
+
+    private val viewModel: ScrollViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +82,20 @@ class ScrollActivity : AppCompatActivity(), SensorEventListener {
             v?.performClick() ?: true
         }
 
+        textViewToRead.setOnScrollChangeListener { _, _, _, _, _ ->
+            viewModel.onScroll(isScrolledToBottom = !textViewToRead.canScrollVertically(1))
+        }
+
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.taskDoneSideEffect.collect {
+                    Toast.makeText(this@ScrollActivity, R.string.task_successfully_done, Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
     }
 
     override fun onResume() {
