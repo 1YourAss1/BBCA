@@ -26,6 +26,7 @@ import ru.mtuci.bbca.Sensors
 import ru.mtuci.bbca.SwipeActivity
 import ru.mtuci.bbca.clicks.ClicksActivity
 import ru.mtuci.bbca.scroll.ScrollActivity
+import ru.mtuci.bbca.video.VideoActivity
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -78,6 +79,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
         findViewById<Button>(R.id.buttonSwipe).setOnClickListener{ startActivity(Intent(this, SwipeActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
         findViewById<Button>(R.id.buttonScale).setOnClickListener{ startActivity(Intent(this, ScaleActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
         findViewById<Button>(R.id.buttonClicks).setOnClickListener{ startActivity(Intent(this, ClicksActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
+        findViewById<Button>(R.id.buttonVideo).setOnClickListener{ startActivity(Intent(this, VideoActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
         // Set up textviews for debug
         textViewTouch = findViewById(R.id.textViewTouch)
         textViewAccelerometer = findViewById(R.id.textViewAccelerometer)
