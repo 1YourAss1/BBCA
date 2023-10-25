@@ -25,7 +25,7 @@
             android:name="ru.mtuci.bbca.scroll.ScrollActivity"
             android:exported="false" />
         <activity
-            android:name="ru.mtuci.bbca.MainActivity"
+            android:name="ru.mtuci.bbca.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

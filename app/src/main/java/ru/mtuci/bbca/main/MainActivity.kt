@@ -1,4 +1,4 @@
-package ru.mtuci.bbca
+package ru.mtuci.bbca.main
 
 import android.content.Context
 import android.content.Intent
@@ -14,10 +14,16 @@ import android.view.MotionEvent
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONArray
 import org.json.JSONObject
+import ru.mtuci.bbca.KeyStrokeActivity
+import ru.mtuci.bbca.R
+import ru.mtuci.bbca.ScaleActivity
+import ru.mtuci.bbca.Sensors
+import ru.mtuci.bbca.SwipeActivity
 import ru.mtuci.bbca.scroll.ScrollActivity
 import java.io.BufferedOutputStream
 import java.io.File
@@ -39,39 +45,16 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
     private lateinit var textViewHumidity: TextView
     private lateinit var sensorManager: SensorManager
 
+    private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         // Init sensor manager
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        var currentSessionPath = "$filesDir/user_data"
-        File(currentSessionPath).mkdirs()
-        // Create info data
-        val jsonInfoFile = File(currentSessionPath + File.separator + "info.json")
-        if (!jsonInfoFile.exists()) {
-            val jsonInfo = JSONObject()
-            jsonInfo.put("screen", JSONObject().apply {
-                put("width", resources.displayMetrics.widthPixels)
-                put("height", resources.displayMetrics.heightPixels)
-            })
-            jsonInfo.put("device", JSONObject().apply {
-                put("android_version", android.os.Build.VERSION.SDK_INT)
-                put("device", android.os.Build.DEVICE)
-                put("model", android.os.Build.MODEL)
-                put("brand", android.os.Build.BRAND)
-                put("manufacturer", android.os.Build.MANUFACTURER)
-            })
-            jsonInfo.put("sensors", JSONArray(sensorManager.getSensorList(Sensor.TYPE_ALL).map { sensor -> JSONObject("{\"name\": \"${sensor.name}\", \"vendor\": \"${sensor.vendor}\"}") }))
-            FileOutputStream(jsonInfoFile).write(jsonInfo.toString().toByteArray())
-        }
-        // Create dir for new session
-        if (File(currentSessionPath).listFiles()?.isNotEmpty() == true && File(currentSessionPath).listFiles().any { it.name.contains("session") }) {
-            val newSession = "session${
-                File(currentSessionPath).listFiles()?.last { it.name.contains("session") }?.name?.filter { it.isDigit() }?.toInt()?.inc()}"
-            if (File("$currentSessionPath/$newSession").mkdirs()) currentSessionPath = "$currentSessionPath/$newSession"
-        } else {
-            if (File("$currentSessionPath/session1").mkdirs()) currentSessionPath = "$currentSessionPath/session1"
-        }
+
+        viewModel.initializeSession(context = this, sensorManager = sensorManager)
+
         // Set up buttons
         findViewById<FloatingActionButton>(R.id.buttonDownloadData).setOnClickListener {
             if (File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)}", "user_data.zip").exists()) File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)}", "user_data.zip").delete()
@@ -89,10 +72,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
             }
             Toast.makeText(this, "Данные сохранены в ${outputZipFile.path}", Toast.LENGTH_LONG).show()
         }
-        findViewById<Button>(R.id.buttonKeyStroke).setOnClickListener { startActivity(Intent(this, KeyStrokeActivity::class.java).putExtra("currentSessionPath", currentSessionPath)) }
-        findViewById<Button>(R.id.buttonScroll).setOnClickListener { startActivity(Intent(this, ScrollActivity::class.java).putExtra("currentSessionPath", currentSessionPath)) }
-        findViewById<Button>(R.id.buttonSwipe).setOnClickListener{ startActivity(Intent(this, SwipeActivity::class.java).putExtra("currentSessionPath", currentSessionPath)) }
-        findViewById<Button>(R.id.buttonScale).setOnClickListener{ startActivity(Intent(this, ScaleActivity::class.java).putExtra("currentSessionPath", currentSessionPath)) }
+        findViewById<Button>(R.id.buttonKeyStroke).setOnClickListener { startActivity(Intent(this, KeyStrokeActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
+        findViewById<Button>(R.id.buttonScroll).setOnClickListener { startActivity(Intent(this, ScrollActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
+        findViewById<Button>(R.id.buttonSwipe).setOnClickListener{ startActivity(Intent(this, SwipeActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
+        findViewById<Button>(R.id.buttonScale).setOnClickListener{ startActivity(Intent(this, ScaleActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
         // Set up textviews for debug
         textViewTouch = findViewById(R.id.textViewTouch)
         textViewAccelerometer = findViewById(R.id.textViewAccelerometer)
