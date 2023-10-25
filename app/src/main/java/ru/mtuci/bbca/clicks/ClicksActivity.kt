@@ -16,37 +16,27 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
 import ru.mtuci.bbca.R
-import ru.mtuci.bbca.core.TrackingFrameLayout
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
 
 class ClicksActivity : AppCompatActivity() {
     private val viewModel: ClicksViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_clicks)
-
-        val userActivityDataWriter = userActivityDataWriter(
+    private val userActivityDataWriter by lazy(LazyThreadSafetyMode.NONE) {
+        userActivityDataWriter(
             currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
             directoryName = "clicks",
             activityName = "clicks",
             activityColumns = listOf("timestamp", "orientation", "x_coordinate", "y_coordinate", "pressure")
         )
+    }
 
-        val trackingLayout = findViewById<TrackingFrameLayout>(R.id.trackingLayout)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_clicks)
+
         val buttons = findViewById<GridLayout>(R.id.buttons).children
         val startButton = findViewById<Button>(R.id.startButton)
         val progressView = findViewById<TextView>(R.id.progress)
-
-        trackingLayout.setOnTouchEventListener { event ->
-            when (event?.actionMasked) {
-                MotionEvent.ACTION_DOWN -> {
-                    userActivityDataWriter.writeActivity(
-                        listOf(System.currentTimeMillis(), resources.configuration.orientation, event.x, event.y, event.pressure)
-                    )
-                }
-            }
-        }
 
         startButton.setOnClickListener {
             viewModel.onStartClick()
@@ -102,5 +92,17 @@ class ClicksActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+        when (event?.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                userActivityDataWriter.writeActivity(
+                    listOf(System.currentTimeMillis(), resources.configuration.orientation, event.x, event.y, event.pressure)
+                )
+            }
+        }
+
+        return super.dispatchTouchEvent(event)
     }
 }

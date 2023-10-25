@@ -21,43 +21,22 @@ class ScrollActivity : AppCompatActivity() {
 
     private val viewModel: ScrollViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_scroll)
-        textViewTouch = findViewById(R.id.textViewTouch)
-
-        val userActivityDataWriter = userActivityDataWriter(
+    private val userActivityDataWriter by lazy(LazyThreadSafetyMode.NONE) {
+        userActivityDataWriter(
             currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
             directoryName = "scroll",
             activityName = "scroll",
             activityColumns = listOf("timestamp", "orientation", "x_coordinate", "y_coordinate", "pressure", "action")
         )
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_scroll)
+        textViewTouch = findViewById(R.id.textViewTouch)
 
         textViewToRead = findViewById(R.id.textViewToRead)
         textViewToRead.movementMethod = ScrollingMovementMethod()
-        textViewToRead.setOnTouchListener { v, event ->
-            when (event?.actionMasked) {
-                MotionEvent.ACTION_DOWN -> {
-                    userActivityDataWriter.writeActivity(
-                        listOf(System.currentTimeMillis(), resources.configuration.orientation, event.x, event.y, event.pressure, event.action)
-                    )
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    userActivityDataWriter.writeActivity(
-                        listOf(System.currentTimeMillis(), resources.configuration.orientation, event.x, event.y, event.pressure, event.action)
-                    )
-                    textViewTouch.text ="X: %.3f ".format(event?.x) + "Y: %.3f ".format(event?.y) + "P: %.3f".format(event?.pressure)
-                }
-                MotionEvent.ACTION_UP -> {
-                    userActivityDataWriter.writeActivity(
-                        listOf(System.currentTimeMillis(), resources.configuration.orientation, event.x, event.y, event.pressure, event.action)
-                    )
-                    textViewTouch.text = ""
-                }
-
-            }
-            v?.performClick() ?: true
-        }
 
         textViewToRead.setOnScrollChangeListener { _, _, _, _, _ ->
             viewModel.onScroll(isScrolledToBottom = !textViewToRead.canScrollVertically(1))
@@ -71,5 +50,30 @@ class ScrollActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+        when (event?.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                userActivityDataWriter.writeActivity(
+                    listOf(System.currentTimeMillis(), resources.configuration.orientation, event.x, event.y, event.pressure, event.action)
+                )
+            }
+            MotionEvent.ACTION_MOVE -> {
+                userActivityDataWriter.writeActivity(
+                    listOf(System.currentTimeMillis(), resources.configuration.orientation, event.x, event.y, event.pressure, event.action)
+                )
+                textViewTouch.text ="X: %.3f ".format(event?.x) + "Y: %.3f ".format(event?.y) + "P: %.3f".format(event?.pressure)
+            }
+            MotionEvent.ACTION_UP -> {
+                userActivityDataWriter.writeActivity(
+                    listOf(System.currentTimeMillis(), resources.configuration.orientation, event.x, event.y, event.pressure, event.action)
+                )
+                textViewTouch.text = ""
+            }
+
+        }
+
+        return super.dispatchTouchEvent(event)
     }
 }
