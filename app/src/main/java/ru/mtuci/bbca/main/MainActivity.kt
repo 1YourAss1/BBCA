@@ -14,11 +14,10 @@ import android.view.MotionEvent
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import org.json.JSONArray
-import org.json.JSONObject
 import ru.mtuci.bbca.KeyStrokeActivity
 import ru.mtuci.bbca.R
 import ru.mtuci.bbca.ScaleActivity
@@ -30,7 +29,6 @@ import ru.mtuci.bbca.scroll.ScrollActivity
 import ru.mtuci.bbca.video.VideoActivity
 import java.io.BufferedOutputStream
 import java.io.File
-import java.io.FileOutputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
@@ -50,6 +48,28 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
 
     private val viewModel: MainViewModel by viewModels()
 
+    private val saveArchivedData = registerForActivityResult(
+        ActivityResultContracts.CreateDocument("application/zip")
+    ) { uri ->
+        if (uri != null) {
+            if (File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)}", "user_data.zip").exists()) File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)}", "user_data.zip").delete()
+            val inputDirectory = File("$filesDir/user_data")
+            ZipOutputStream(BufferedOutputStream(contentResolver.openOutputStream(uri))).use { zos ->
+                inputDirectory.walkTopDown().forEach { file ->
+                    val zipFileName = file.absolutePath.removePrefix(inputDirectory.absolutePath).removePrefix("/")
+                    val entry = ZipEntry( "$zipFileName${(if (file.isDirectory) "/" else "" )}")
+                    zos.putNextEntry(entry)
+                    if (file.isFile) {
+                        file.inputStream().use { fis -> fis.copyTo(zos) }
+                    }
+                }
+            }
+            Toast.makeText(this, "Данные сохранены в указанный файл!", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -60,21 +80,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
 
         // Set up buttons
         findViewById<FloatingActionButton>(R.id.buttonDownloadData).setOnClickListener {
-            if (File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)}", "user_data.zip").exists()) File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)}", "user_data.zip").delete()
-            val inputDirectory = File("$filesDir/user_data")
-            val outputZipFile = File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)}", "user_data.zip")
-            ZipOutputStream(BufferedOutputStream(FileOutputStream(outputZipFile))).use { zos ->
-                inputDirectory.walkTopDown().forEach { file ->
-                    val zipFileName = file.absolutePath.removePrefix(inputDirectory.absolutePath).removePrefix("/")
-                    val entry = ZipEntry( "$zipFileName${(if (file.isDirectory) "/" else "" )}")
-                    zos.putNextEntry(entry)
-                    if (file.isFile) {
-                        file.inputStream().use { fis -> fis.copyTo(zos) }
-                    }
-                }
-            }
-            Toast.makeText(this, "Данные сохранены в ${outputZipFile.path}", Toast.LENGTH_LONG).show()
+            saveArchivedData.launch("user_data.zip")
         }
+
         findViewById<Button>(R.id.buttonKeyStroke).setOnClickListener { startActivity(Intent(this, KeyStrokeActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
         findViewById<Button>(R.id.buttonScroll).setOnClickListener { startActivity(Intent(this, ScrollActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
         findViewById<Button>(R.id.buttonSwipe).setOnClickListener{ startActivity(Intent(this, SwipeActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
