@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
 import ru.mtuci.bbca.R
+import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
 
 
@@ -32,6 +33,12 @@ class ScrollActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        sensorsDataWriter(
+            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            directoryName = "scroll",
+        )
+
         setContentView(R.layout.activity_scroll)
         textViewTouch = findViewById(R.id.textViewTouch)
 

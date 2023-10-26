@@ -110,4 +110,6 @@
     <string name="skip_ads">Пропускайте рекламу в видео</string>
     <string name="delete_all_items">Удалите все элементы посредством длительного нажатия: %1$d/10</string>
     <string name="should_delete">Нужно удалить №%1$d</string>
+    <string name="like">Лайк поставлен!</string>
+    <string name="swipe_task_description">Смотрите картинки с помощью свайпа и лайкайте понравившиеся двойным кликом</string>
 </resources>
