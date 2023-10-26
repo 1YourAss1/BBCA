@@ -32,6 +32,9 @@
             android:configChanges="orientation|screenSize|layoutDirection"
             android:exported="false" />
         <activity
+            android:name="ru.mtuci.bbca.long_click.LongClickActivity"
+            android:exported="false" />
+        <activity
             android:name="ru.mtuci.bbca.main.MainActivity"
             android:exported="true">
             <intent-filter>

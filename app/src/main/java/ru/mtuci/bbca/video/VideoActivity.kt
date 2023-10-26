@@ -1,3 +1,5 @@
+@file:UnstableApi
+
 package ru.mtuci.bbca.video
 
 import android.net.Uri
@@ -21,7 +23,6 @@ import ru.mtuci.bbca.R
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
 
 
-@UnstableApi
 class VideoActivity : AppCompatActivity() {
 
     /**
