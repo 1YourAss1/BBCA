@@ -8,10 +8,19 @@ fun ComponentActivity.userActivityDataWriter(
     activityName: String,
     activityColumns: List<String>,
 ) = UserActivityDataWriter(
-    context = this,
     lifecycle = lifecycle,
     currentSessionPath = currentSessionPath,
     directoryName = directoryName,
     activityName = activityName,
     activityColumns = activityColumns
+)
+
+fun ComponentActivity.sensorsDataWriter(
+    currentSessionPath: String,
+    directoryName: String,
+) = SensorsDataWriter(
+    context = this,
+    lifecycle = lifecycle,
+    currentSessionPath = currentSessionPath,
+    directoryName = directoryName,
 )

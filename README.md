@@ -26,6 +26,7 @@
 ```
 - keystroke.csv: [timestamp, orientation, ascii_code, letter] 
 - swipe.csv: [timestamp, orientation, x_coordinate, y_coordinate, pressure, action_type]
+- double_click.csv: [timestamp, orientation, x_coordinate, y_coordinate, pressure, click_number]
 - scroll.csv: [timestamp, orientation, x_coordinate, y_coordinate, pressure, action_type]
 - scale.csv: [timestamp, orientation, x1_coordinate, y1_coordinate, pressure1, x2_coordinate, y2_coordinate, pressure2, action_type]
 - clicks.csv: [timestamp, orientation, x_coordinate, y_coordinate, pressure]

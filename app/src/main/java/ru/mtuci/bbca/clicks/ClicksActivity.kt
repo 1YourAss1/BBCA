@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
 import ru.mtuci.bbca.R
+import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
 
 class ClicksActivity : AppCompatActivity() {
@@ -32,6 +33,12 @@ class ClicksActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        sensorsDataWriter(
+            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            directoryName = "clicks",
+        )
+
         setContentView(R.layout.activity_clicks)
 
         val buttons = findViewById<GridLayout>(R.id.buttons).children

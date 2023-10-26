@@ -5,6 +5,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
+import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
 
 class KeyStrokeActivity : AppCompatActivity() {
@@ -19,6 +20,11 @@ class KeyStrokeActivity : AppCompatActivity() {
             directoryName = "keystroke",
             activityName = "keystroke",
             activityColumns = listOf("timestamp", "orientation", "ascii", "letter")
+        )
+
+        sensorsDataWriter(
+            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            directoryName = "keystroke",
         )
 
         textViewKeystroke = findViewById(R.id.textViewKeystroke)
