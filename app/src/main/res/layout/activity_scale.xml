@@ -18,10 +18,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:transformation="centerInside"
         app:transformationGravity="auto"
+        app:oneFingerScrollEnabled="false"
+        app:twoFingersScrollEnabled="true"
+        app:threeFingersScrollEnabled="false"
+        app:flingEnabled="false"
         app:maxZoom="10"
         app:minZoom="1"
-        app:overScrollHorizontal="true"
-        app:overScrollVertical="true"
+        app:overScrollHorizontal="false"
+        app:overScrollVertical="false"
         app:overPinchable="false"
         tools:src="@drawable/scale"/>
 
