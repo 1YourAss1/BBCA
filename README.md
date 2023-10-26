@@ -31,6 +31,7 @@
 - scale.csv: [timestamp, orientation, x1_coordinate, y1_coordinate, pressure1, x2_coordinate, y2_coordinate, pressure2, action_type]
 - clicks.csv: [timestamp, orientation, x_coordinate, y_coordinate, pressure]
 - video.csv: [timestamp, orientation, x_coordinate, y_coordinate, pressure, action_type]
+- paint.csv: [timestamp, orientation, x_coordinate, y_coordinate, pressure, action_type]
 - long_clicks.csv: [timestamp, orientation, x_coordinate, y_coordinate, pressure, action_type]
 - sensor_acc.csv: [timestamp, orientation, x_axis, y_axis, z_axis]
 - sensor_grav.csv: [timestamp, orientation, x_axis, y_axis, z_axis]
