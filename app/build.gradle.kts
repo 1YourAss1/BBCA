@@ -53,4 +53,5 @@ dependencies {
     implementation("androidx.media3:media3-exoplayer:1.1.1")
     implementation("androidx.media3:media3-ui:1.1.1")
     implementation("androidx.media3:media3-common:1.1.1")
+    implementation("androidx.gridlayout:gridlayout:1.0.0")
 }
