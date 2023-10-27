@@ -25,6 +25,7 @@ import ru.mtuci.bbca.Sensors
 import ru.mtuci.bbca.SwipeActivity
 import ru.mtuci.bbca.clicks.ClicksActivity
 import ru.mtuci.bbca.long_click.LongClickActivity
+import ru.mtuci.bbca.paint.PaintActivity
 import ru.mtuci.bbca.scroll.ScrollActivity
 import ru.mtuci.bbca.video.VideoActivity
 import java.io.BufferedOutputStream
@@ -90,6 +91,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
         findViewById<Button>(R.id.buttonClicks).setOnClickListener{ startActivity(Intent(this, ClicksActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
         findViewById<Button>(R.id.buttonVideo).setOnClickListener{ startActivity(Intent(this, VideoActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
         findViewById<Button>(R.id.buttonLongClicks).setOnClickListener{ startActivity(Intent(this, LongClickActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
+        findViewById<Button>(R.id.buttonPaint).setOnClickListener{ startActivity(Intent(this, PaintActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
         // Set up textviews for debug
         textViewTouch = findViewById(R.id.textViewTouch)
         textViewAccelerometer = findViewById(R.id.textViewAccelerometer)
