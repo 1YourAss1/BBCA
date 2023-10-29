@@ -13,7 +13,7 @@ class KeyStrokeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_key_stroke)
+        setContentView(R.layout.activity_keystroke)
 
         val userActivityDataWriter = userActivityDataWriter(
             currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
@@ -28,10 +28,10 @@ class KeyStrokeActivity : AppCompatActivity() {
         )
 
         textViewKeystroke = findViewById(R.id.textViewKeystroke)
-        textViewKeystroke.text = "${getString(R.string.keystroke_task_text)} 100"
+        textViewKeystroke.text = "${getString(R.string.keystroke_task)} 0/100"
 
         findViewById<EditText>(R.id.editTextKeystroke).doOnTextChanged { text, start, before, count ->
-            textViewKeystroke.text = "${getString(R.string.keystroke_task_text)} ${if(100 - text?.length!! >= 0) 100 - text?.length!! else 0}"
+            textViewKeystroke.text = "${getString(R.string.keystroke_task)} ${if(text?.length!! <= 100) text?.length!! else 100}/100"
             if (before == 1) {
                 userActivityDataWriter.writeActivity(
                     listOf(System.currentTimeMillis(), resources.configuration.orientation, "8", "del")

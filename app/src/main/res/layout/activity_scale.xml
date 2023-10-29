@@ -7,44 +7,37 @@
     android:layout_height="match_parent"
     tools:context="ru.mtuci.bbca.ScaleActivity">
 
+    <TextView
+        android:id="@+id/textViewFindCharacter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Task"
+        android:text="@string/scale_task"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.otaliastudios.zoom.ZoomImageView
         android:id="@+id/zoomageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:flingEnabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:transformation="centerInside"
-        app:transformationGravity="auto"
-        app:oneFingerScrollEnabled="false"
-        app:twoFingersScrollEnabled="true"
-        app:threeFingersScrollEnabled="false"
-        app:flingEnabled="false"
+        app:layout_constraintTop_toBottomOf="@+id/textViewFindCharacter"
         app:maxZoom="10"
         app:minZoom="1"
+        app:oneFingerScrollEnabled="false"
+        app:overPinchable="false"
         app:overScrollHorizontal="false"
         app:overScrollVertical="false"
-        app:overPinchable="false"
-        tools:src="@drawable/scale"/>
+        app:threeFingersScrollEnabled="false"
+        app:transformation="centerInside"
+        app:transformationGravity="auto"
+        app:twoFingersScrollEnabled="true"
+        tools:src="@drawable/scale" />
 
-    <TextView
-        android:id="@+id/textViewFindCharacter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#BF505050"
-        android:padding="5dp"
-        android:text="@string/find_character"
-        android:textSize="20sp"
-        android:textColor="@color/white"
-        android:shadowColor="@color/black"
-        android:shadowRadius="5"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.022" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -67,7 +67,7 @@ class ClicksActivity : AppCompatActivity() {
 
                 launch {
                     viewModel.progress.collect { progress ->
-                        progressView.text = "$progress/10"
+                        progressView.text = "${resources.getText(R.string.click_task)}: $progress/10"
                     }
                 }
 
@@ -77,12 +77,10 @@ class ClicksActivity : AppCompatActivity() {
                             ClicksStartButtonState.IN_PROGRESS -> {
                                 startButton.isVisible = true
                                 startButton.isEnabled = false
-                                startButton.setText(R.string.click_all_buttons)
                             }
                             ClicksStartButtonState.IDLE -> {
                                 startButton.isVisible = true
                                 startButton.isEnabled = true
-                                startButton.setText(R.string.start)
                             }
                             ClicksStartButtonState.GONE -> {
                                 startButton.isVisible = false

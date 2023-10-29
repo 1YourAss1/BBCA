@@ -18,11 +18,20 @@
     <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <TextView
+        android:id="@+id/textViewReadTask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Task"
+        android:text="@string/scroll_task"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/textViewToRead"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:lineSpacingExtra="8sp"
@@ -34,17 +43,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewReadTask"
         tools:ignore="VisualLintLongText" />
 
-    <TextView
-        android:id="@+id/textViewTouch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="SmallSp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

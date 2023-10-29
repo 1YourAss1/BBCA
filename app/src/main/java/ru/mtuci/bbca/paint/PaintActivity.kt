@@ -75,7 +75,7 @@ class PaintActivity : AppCompatActivity() {
 
                 launch {
                     viewModel.progress.collect { progress ->
-                        progressView.text = getString(R.string.draw_symbol, currentSessionNumber, progress)
+                        progressView.text = getString(R.string.draw_task, currentSessionNumber, progress)
                     }
                 }
             }

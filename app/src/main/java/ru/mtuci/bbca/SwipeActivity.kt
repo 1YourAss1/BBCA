@@ -14,7 +14,6 @@ import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
 
 class SwipeActivity : FragmentActivity(),
     GestureDetector.OnDoubleTapListener, GestureDetector.OnGestureListener {
-    private lateinit var textViewTouch: TextView
 
     private val swipeActivityDataWriter by lazy(LazyThreadSafetyMode.NONE) {
         userActivityDataWriter(
@@ -50,7 +49,6 @@ class SwipeActivity : FragmentActivity(),
 
         setContentView(R.layout.activity_swipe)
 
-        textViewTouch = findViewById(R.id.textViewTouch)
 
         val ranInts = generateSequence { (0..941).random() }.distinct().take(50).toSet().toIntArray()
         val adapter = NumberAdapter(this, ranInts)
@@ -101,13 +99,11 @@ class SwipeActivity : FragmentActivity(),
                 swipeActivityDataWriter.writeActivity(
                     listOf(System.currentTimeMillis(), resources.configuration.orientation, event.x, event.y, event.pressure, event.action)
                 )
-                textViewTouch.text ="X: %.3f ".format(event?.x) + "Y: %.3f ".format(event?.y) + "P: %.3f".format(event?.pressure)
             }
             MotionEvent.ACTION_UP -> {
                 swipeActivityDataWriter.writeActivity(
                     listOf(System.currentTimeMillis(), resources.configuration.orientation, event.x, event.y, event.pressure, event.action)
                 )
-                textViewTouch.text = ""
             }
         }
 

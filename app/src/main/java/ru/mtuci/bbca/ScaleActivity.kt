@@ -34,17 +34,17 @@ class ScaleActivity : AppCompatActivity() {
 
         imageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.scale))
 
-        val characterList: ArrayList<String> = arrayListOf("Волдо", "Бэтмен")
+        val characterList: ArrayList<String> = arrayListOf("Уолли (Где Уолли?)", "Бэтмен", "Каонаси (Унесённые призраками)", "Саб-Зиро (Mortal Kombat)", "Скорпион (Mortal Kombat)")
         var currentCharacter = 0
         var taskDone = false
         findViewById<TextView>(R.id.textViewFindCharacter).apply {
             text =
-                "${resources.getText(R.string.find_character)}: ${characterList[0]} ($currentCharacter/${characterList.size})"
+                "${resources.getText(R.string.scale_task)}: ${characterList[0]}\n$currentCharacter/${characterList.size}"
             setOnClickListener {
                 if (currentCharacter.inc() == characterList.size) taskDone = true
                 currentCharacter = currentCharacter.inc().mod(characterList.size)
                 text =
-                    "${resources.getText(R.string.find_character)}: ${characterList[currentCharacter]} (${if (!taskDone) currentCharacter else characterList.size}/${characterList.size})"
+                    "${resources.getText(R.string.scale_task)}: ${characterList[currentCharacter]}\n${if (!taskDone) currentCharacter else characterList.size}/${characterList.size}"
             }
         }
     }

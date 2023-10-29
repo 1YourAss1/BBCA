@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Debug" parent="TextAppearance.AppCompat">
+        <!--    Make "visible" to debug    -->
+        <item name="android:visibility">visible</item>
+        <item name="android:background">#BF5050</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+    <style name="Task" parent="TextAppearance.AppCompat">
+        <item name="android:padding">5dp</item>
+        <item name="android:background">#BF505050</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:shadowColor">@color/black</item>
+        <item name="android:shadowRadius">5</item>
+    </style>
+</resources>

@@ -129,36 +129,36 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
     override fun onSensorChanged(event: SensorEvent?) {
         // Debug data from sensors
         when (event?.sensor?.type) {
-            Sensors.ACC.type -> textViewAccelerometer.text = "Acc\n" +
+            Sensors.ACC.type -> textViewAccelerometer.text = "${getString(R.string.accelerometer)}\n" +
                         "X: %.3f\n".format(event?.values?.get(0)) +
                         "Y: %.3f\n".format(event?.values?.get(1)) +
                         "Z: %.3f\n".format(event?.values?.get(2))
-            Sensors.GYRO.type -> textViewGyroscope.text = "Gyro\n" +
+            Sensors.GYRO.type -> textViewGyroscope.text = "${getString(R.string.gyroscope)}\n" +
                     "X: %.3f\n".format(event?.values?.get(0)) +
                     "Y: %.3f\n".format(event?.values?.get(1)) +
                     "Z: %.3f\n".format(event?.values?.get(2))
-            Sensors.GRAV.type -> textViewGravity.text = "Grav\n" +
+            Sensors.GRAV.type -> textViewGravity.text = "${getString(R.string.gravity)}\n" +
                     "X: %.3f\n".format(event?.values?.get(0)) +
                     "Y: %.3f\n".format(event?.values?.get(1)) +
                     "Z: %.3f\n".format(event?.values?.get(2))
-            Sensors.LACC.type -> textViewLinearAccelerometer.text = "Lacc\n" +
+            Sensors.LACC.type -> textViewLinearAccelerometer.text = "${getString(R.string.accelerometer_linear)}\n" +
                     "X: %.3f\n".format(event?.values?.get(0)) +
                     "Y: %.3f\n".format(event?.values?.get(1)) +
                     "Z: %.3f\n".format(event?.values?.get(2))
-            Sensors.MAGN.type -> textViewMagneticField.text = "Magn\n" +
+            Sensors.MAGN.type -> textViewMagneticField.text = "${getString(R.string.magnetic_field)}\n" +
                     "X: %.3f\n".format(event?.values?.get(0)) +
                     "Y: %.3f\n".format(event?.values?.get(1)) +
                     "Z: %.3f\n".format(event?.values?.get(2))
 
-            Sensors.LIGHT.type -> textViewLight.text = "Light\n" +
+            Sensors.LIGHT.type -> textViewLight.text = "${getString(R.string.light)}\n" +
                     "val: %.3f\n".format(event?.values?.get(0))
-            Sensors.PROX.type -> textViewProximity.text = "Prox\n" +
+            Sensors.PROX.type -> textViewProximity.text = "${getString(R.string.proximity)}\n" +
                     "val: %.3f\n".format(event?.values?.get(0))
-            Sensors.TEMP.type -> textViewTemperature.text = "Temp\n" +
+            Sensors.TEMP.type -> textViewTemperature.text = "${getString(R.string.temperature)}\n" +
                     "val: %.3f\n".format(event?.values?.get(0))
-            Sensors.PRES.type -> textViewPressure.text = "Pres\n" +
+            Sensors.PRES.type -> textViewPressure.text = "${getString(R.string.pressure)}\n" +
                     "val: %.3f\n".format(event?.values?.get(0))
-            Sensors.HUM.type -> textViewHumidity.text = "Hum\n" +
+            Sensors.HUM.type -> textViewHumidity.text = "${getString(R.string.humidity)}\n" +
                     "val: %.3f\n".format(event?.values?.get(0))
         }
     }

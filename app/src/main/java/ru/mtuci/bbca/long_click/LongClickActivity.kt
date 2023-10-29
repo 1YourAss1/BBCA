@@ -72,7 +72,7 @@ class LongClickActivity : AppCompatActivity() {
 
                 launch {
                     viewModel.progress.collect { progress ->
-                        progressView.text = getString(R.string.delete_all_items, progress)
+                        progressView.text = getString(R.string.long_click_task, progress)
                     }
                 }
             }

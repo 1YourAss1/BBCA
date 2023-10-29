@@ -17,7 +17,6 @@ import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
 
 
 class ScrollActivity : AppCompatActivity() {
-    private lateinit var textViewTouch: TextView
     private lateinit var textViewToRead: TextView
 
     private val viewModel: ScrollViewModel by viewModels()
@@ -40,7 +39,6 @@ class ScrollActivity : AppCompatActivity() {
         )
 
         setContentView(R.layout.activity_scroll)
-        textViewTouch = findViewById(R.id.textViewTouch)
 
         textViewToRead = findViewById(R.id.textViewToRead)
         textViewToRead.movementMethod = ScrollingMovementMethod()
@@ -70,13 +68,11 @@ class ScrollActivity : AppCompatActivity() {
                 userActivityDataWriter.writeActivity(
                     listOf(System.currentTimeMillis(), resources.configuration.orientation, event.x, event.y, event.pressure, event.action)
                 )
-                textViewTouch.text ="X: %.3f ".format(event?.x) + "Y: %.3f ".format(event?.y) + "P: %.3f".format(event?.pressure)
             }
             MotionEvent.ACTION_UP -> {
                 userActivityDataWriter.writeActivity(
                     listOf(System.currentTimeMillis(), resources.configuration.orientation, event.x, event.y, event.pressure, event.action)
                 )
-                textViewTouch.text = ""
             }
 
         }

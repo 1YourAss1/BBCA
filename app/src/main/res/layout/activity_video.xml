@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        style="@style/Task"
+        android:text="@string/video_task" />
+
     <androidx.media3.ui.PlayerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,19 +20,5 @@
         android:id="@+id/playerView"
         app:use_controller="true"
         app:shutter_background_color="@android:color/black" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center_horizontal|top"
-        android:background="#BF505050"
-        android:padding="5dp"
-        android:textSize="20sp"
-        android:textColor="@color/white"
-        android:shadowColor="@color/black"
-        android:shadowRadius="5"
-        android:textStyle="bold"
-        android:text="@string/skip_ads" />
 
 </FrameLayout>
