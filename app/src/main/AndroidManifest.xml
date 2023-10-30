@@ -19,7 +19,7 @@
             android:name="ru.mtuci.bbca.KeyStrokeActivity"
             android:exported="false" />
         <activity
-            android:name="ru.mtuci.bbca.SwipeActivity"
+            android:name="ru.mtuci.bbca.swipe.SwipeActivity"
             android:exported="false" />
         <activity
             android:name="ru.mtuci.bbca.scroll.ScrollActivity"

@@ -12,7 +12,7 @@
     <string name="download_user_data">Выгрузить пользовательские данные</string>
     <string name="keystroke_task">Введите текст минимум на 100 символов (например, опишите сюжет фильма или книги):</string>
     <string name="scroll_task">Прочитайте тест до конца</string>
-    <string name="swipe_task">Пролистайте картинки и лайкайте понравившиеся двойным кликом</string>
+    <string name="swipe_task">Пролистайте картинки и лайкайте понравившиеся двойным кликом: %1$d/50</string>
     <string name="scale_task">Найдите персонажей (нажмите на текст, чтобы продолжить)</string>
     <string name="click_task">Нажмите на все кнопки</string>
     <string name="video_task">Перемотайте всю рекламу в видео</string>

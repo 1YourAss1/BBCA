@@ -1,4 +1,4 @@
-package ru.mtuci.bbca
+package ru.mtuci.bbca.swipe
 
 import android.os.Bundle
 import android.os.SystemClock
@@ -6,9 +6,16 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.widget.ViewPager2
+import kotlinx.coroutines.launch
+import ru.mtuci.bbca.NumberAdapter
+import ru.mtuci.bbca.R
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
 
@@ -39,6 +46,16 @@ class SwipeActivity : FragmentActivity(),
         }
     }
 
+    private val viewPager by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<ViewPager2>(R.id.viewPager)
+    }
+
+    private val progressView by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<TextView>(R.id.textViewSwipeTask)
+    }
+
+    private val viewModel: SwipeViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -52,8 +69,30 @@ class SwipeActivity : FragmentActivity(),
 
         val ranInts = generateSequence { (0..941).random() }.distinct().take(50).toSet().toIntArray()
         val adapter = NumberAdapter(this, ranInts)
-        val viewPager: ViewPager2 = findViewById(R.id.viewPager)
         viewPager.adapter = adapter
+
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                viewModel.onPageSelected(position)
+            }
+        })
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.progress.collect { progress ->
+                        progressView.text = getString(R.string.swipe_task, progress)
+                    }
+                }
+
+                launch {
+                    viewModel.taskDoneSideEffect.collect {
+                        Toast.makeText(this@SwipeActivity, R.string.task_successfully_done, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
+        }
     }
 
     override fun onDoubleTapEvent(event: MotionEvent): Boolean {
