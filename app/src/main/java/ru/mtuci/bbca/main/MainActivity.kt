@@ -22,7 +22,7 @@ import ru.mtuci.bbca.KeyStrokeActivity
 import ru.mtuci.bbca.R
 import ru.mtuci.bbca.ScaleActivity
 import ru.mtuci.bbca.Sensors
-import ru.mtuci.bbca.SwipeActivity
+import ru.mtuci.bbca.swipe.SwipeActivity
 import ru.mtuci.bbca.clicks.ClicksActivity
 import ru.mtuci.bbca.long_click.LongClickActivity
 import ru.mtuci.bbca.paint.PaintActivity
