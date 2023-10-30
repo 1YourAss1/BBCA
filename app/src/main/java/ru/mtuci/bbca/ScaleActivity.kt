@@ -45,6 +45,7 @@ class ScaleActivity : AppCompatActivity() {
                 currentCharacter = currentCharacter.inc().mod(characterList.size)
                 text =
                     "${resources.getText(R.string.scale_task)}: ${characterList[currentCharacter]}\n${if (!taskDone) currentCharacter else characterList.size}/${characterList.size}"
+                imageView.zoomOut()
             }
         }
     }
