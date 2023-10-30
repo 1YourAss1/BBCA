@@ -34,7 +34,7 @@ class ScaleActivity : AppCompatActivity() {
 
         imageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.scale))
 
-        val characterList: ArrayList<String> = arrayListOf("Уолли (Где Уолли?)", "Бэтмен", "Каонаси (Унесённые призраками)", "Саб-Зиро (Mortal Kombat)", "Скорпион (Mortal Kombat)")
+        val characterList: Array<String> = resources.getStringArray(R.array.characters)
         var currentCharacter = 0
         var taskDone = false
         findViewById<TextView>(R.id.textViewFindCharacter).apply {

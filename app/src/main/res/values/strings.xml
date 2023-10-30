@@ -36,4 +36,26 @@
     <string name="temperature">Temperature</string>
     <string name="pressure">Pressure</string>
     <string name="humidity">Humidity</string>
+    <string-array name="characters">
+        <item>Уолли (Где Уолли?)</item>
+        <item>Бэтмен (DC)</item>
+        <item>Робин (DC)</item>
+        <item>Саб-Зиро (Mortal Kombat)</item>
+        <item>Скорпион (Mortal Kombat)</item>
+        <item>Штурмовики (Звездные войны)</item>
+        <item>Финн (Время приключений)</item>
+        <item>Гарри Поттер</item>
+        <item>Мегамозг</item>
+        <item>Капитан Америка (Marvel)</item>
+        <item>Волт-Бой (Fallout)</item>
+        <item>Человек-Паук (Marvel)</item>
+        <item>Суперсемейка</item>
+        <item>Дедпул (Marvel)</item>
+        <item>Шерлок Холмс (Шерлок)</item>
+        <item>Зойберг (Футурама)</item>
+        <item>Халк (Marvel)</item>
+        <item>Джокер (Тёмный рыцарь)</item>
+        <item>Царь Леонид (300 спартанцев)</item>
+        <item>Флэш (DC)</item>
+    </string-array>
 </resources>
