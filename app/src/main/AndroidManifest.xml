@@ -38,13 +38,16 @@
             android:name="ru.mtuci.bbca.paint.PaintActivity"
             android:exported="false" />
         <activity
-            android:name="ru.mtuci.bbca.main.MainActivity"
+            android:name=".identifier.IdentifierActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="ru.mtuci.bbca.main.MainActivity"
+            android:exported="false">
         </activity>
     </application>
 

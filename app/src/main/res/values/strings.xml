@@ -58,4 +58,10 @@
         <item>Царь Леонид (300 спартанцев)</item>
         <item>Флэш (DC)</item>
     </string-array>
+    <string name="ok">ОК</string>
+    <string name="identifier_hint">Придумайте идентификатор</string>
+    <string name="identifier_repeat_hint">Повторите идентификатор</string>
+    <string name="identifier_placeholder">ivanov_bvt0000</string>
+    <string name="identifier_too_short">Минимум 6 символов</string>
+    <string name="identifiers_matching_error">Идентификаторы не совпадают</string>
 </resources>
