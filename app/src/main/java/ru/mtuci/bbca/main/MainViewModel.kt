@@ -17,7 +17,8 @@ class MainViewModel : ViewModel() {
 
     fun initializeSession(
         context: Context,
-        sensorManager: SensorManager
+        sensorManager: SensorManager,
+        identifier: String
     ) {
         if (isSessionInitialized) {
             return
@@ -26,7 +27,7 @@ class MainViewModel : ViewModel() {
         isSessionInitialized = true
 
         val resources = context.resources
-        currentSessionPath = "${context.filesDir}/user_data"
+        currentSessionPath = "${context.filesDir}/user_data_$identifier"
         File(currentSessionPath).mkdirs()
         // Create info data
         val jsonInfoFile = File(currentSessionPath + File.separator + "info.json")

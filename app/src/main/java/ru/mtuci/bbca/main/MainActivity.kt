@@ -30,6 +30,7 @@ import ru.mtuci.bbca.scroll.ScrollActivity
 import ru.mtuci.bbca.video.VideoActivity
 import java.io.BufferedOutputStream
 import java.io.File
+import java.io.FilenameFilter
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
@@ -54,16 +55,19 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
     ) { uri ->
         if (uri != null) {
             if (File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)}", "user_data.zip").exists()) File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)}", "user_data.zip").delete()
-            val inputDirectory = File("$filesDir/user_data")
+
             ZipOutputStream(BufferedOutputStream(contentResolver.openOutputStream(uri))).use { zos ->
-                inputDirectory.walkTopDown().forEach { file ->
-                    val zipFileName = file.absolutePath.removePrefix(inputDirectory.absolutePath).removePrefix("/")
-                    val entry = ZipEntry( "$zipFileName${(if (file.isDirectory) "/" else "" )}")
-                    zos.putNextEntry(entry)
-                    if (file.isFile) {
-                        file.inputStream().use { fis -> fis.copyTo(zos) }
+                filesDir.walkTopDown()
+                    .asSequence()
+                    .filter { file -> file.absolutePath.contains("user_data") }
+                    .forEach { file ->
+                        val zipFileName = file.absolutePath.removePrefix(filesDir.absolutePath).removePrefix("/")
+                        val entry = ZipEntry( "$zipFileName${(if (file.isDirectory) "/" else "" )}")
+                        zos.putNextEntry(entry)
+                        if (file.isFile) {
+                            file.inputStream().use { fis -> fis.copyTo(zos) }
+                        }
                     }
-                }
             }
             Toast.makeText(this, "Данные сохранены в указанный файл!", Toast.LENGTH_LONG).show()
         } else {
@@ -77,7 +81,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
         // Init sensor manager
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
-        viewModel.initializeSession(context = this, sensorManager = sensorManager)
+        viewModel.initializeSession(
+            context = this,
+            sensorManager = sensorManager,
+            identifier = intent.getStringExtra("identifier") ?: "null"
+        )
 
         // Set up buttons
         findViewById<FloatingActionButton>(R.id.buttonDownloadData).setOnClickListener {
