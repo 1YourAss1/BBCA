@@ -54,6 +54,10 @@ class SwipeActivity : FragmentActivity(),
         findViewById<TextView>(R.id.textViewSwipeTask)
     }
 
+    private val likeProgressView by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<TextView>(R.id.textViewSwipeLikeTask)
+    }
+
     private val viewModel: SwipeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,6 +90,12 @@ class SwipeActivity : FragmentActivity(),
                 }
 
                 launch {
+                    viewModel.likedPositions.collect { likedPositions ->
+                        likeProgressView.text = getString(R.string.swipe_like_task, likedPositions.size)
+                    }
+                }
+
+                launch {
                     viewModel.taskDoneSideEffect.collect {
                         Toast.makeText(this@SwipeActivity, R.string.task_successfully_done, Toast.LENGTH_SHORT)
                             .show()
@@ -101,6 +111,8 @@ class SwipeActivity : FragmentActivity(),
                 doubleClickActivityDataWriter.writeActivity(
                     listOf(timeMillisOf(event.eventTime), resources.configuration.orientation, event.x, event.y, event.pressure, 2)
                 )
+
+                viewModel.onPageLiked(viewPager.currentItem)
 
                 Toast.makeText(this, R.string.like, Toast.LENGTH_SHORT).show()
 

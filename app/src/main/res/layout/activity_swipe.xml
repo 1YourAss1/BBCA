@@ -22,9 +22,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/Task"
-        tools:text="Пролистайте картинки и лайкайте понравившиеся двойным кликом: 0/50"
+        tools:text="Пролистайте картинки: 0/50"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/textViewSwipeLikeTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Task"
+        tools:text="Лайкайте понравившиеся двойным кликом: 0/20"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
