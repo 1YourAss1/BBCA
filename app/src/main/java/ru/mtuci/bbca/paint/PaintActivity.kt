@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
 import ru.mtuci.bbca.R
+import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
 
 class PaintActivity : AppCompatActivity() {
@@ -54,6 +55,11 @@ class PaintActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_paint)
+
+        sensorsDataWriter(
+            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            directoryName = "paint",
+        )
 
         clearButton.setOnClickListener {
             paintView.clear()

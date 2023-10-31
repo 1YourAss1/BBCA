@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 import ru.mtuci.bbca.R
+import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
 
 class LongClickActivity : AppCompatActivity() {
@@ -51,6 +52,11 @@ class LongClickActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_long_click)
+
+        sensorsDataWriter(
+            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            directoryName = "long_clicks",
+        )
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter

@@ -20,6 +20,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import ru.mtuci.bbca.R
+import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
 
 
@@ -54,6 +55,11 @@ class VideoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_video)
+
+        sensorsDataWriter(
+            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            directoryName = "video",
+        )
 
         playerView.controllerAutoShow = false
         playerView.controllerHideOnTouch = false
