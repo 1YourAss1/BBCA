@@ -247,6 +247,17 @@
         tools:ignore="SmallSp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/buttonShareData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toTopOf="@id/buttonDownloadData"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_share"
+        android:contentDescription="@string/download_user_data" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/buttonDownloadData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

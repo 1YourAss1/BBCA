@@ -8,6 +8,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.Location
 import android.location.LocationListener
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.view.MotionEvent
@@ -17,6 +18,8 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import ru.mtuci.bbca.KeyStrokeActivity
 import ru.mtuci.bbca.R
@@ -30,6 +33,7 @@ import ru.mtuci.bbca.scroll.ScrollActivity
 import ru.mtuci.bbca.video.VideoActivity
 import java.io.BufferedOutputStream
 import java.io.File
+import java.io.OutputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
@@ -55,19 +59,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
         if (uri != null) {
             if (File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)}", "user_data.zip").exists()) File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)}", "user_data.zip").delete()
 
-            ZipOutputStream(BufferedOutputStream(contentResolver.openOutputStream(uri))).use { zos ->
-                filesDir.walkTopDown()
-                    .asSequence()
-                    .filter { file -> file.absolutePath.contains("user_data") }
-                    .forEach { file ->
-                        val zipFileName = file.absolutePath.removePrefix(filesDir.absolutePath).removePrefix("/")
-                        val entry = ZipEntry( "$zipFileName${(if (file.isDirectory) "/" else "" )}")
-                        zos.putNextEntry(entry)
-                        if (file.isFile) {
-                            file.inputStream().use { fis -> fis.copyTo(zos) }
-                        }
-                    }
-            }
+            writeDataTo(contentResolver.openOutputStream(uri))
+
             Toast.makeText(this, "Данные сохранены в указанный файл!", Toast.LENGTH_LONG).show()
         } else {
             Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show()
@@ -110,6 +103,27 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
             Toast.makeText(this, R.string.new_session_success, Toast.LENGTH_LONG).show()
         }
 
+        findViewById<FloatingActionButton>(R.id.buttonShareData).setOnClickListener {
+            val cacheTempDir = File(cacheDir, "temp")
+            cacheTempDir.mkdirs()
+            val tempZipDataFile = File(cacheTempDir, "user_data.zip")
+            val tempZipDataUri = FileProvider.getUriForFile(this, "ru.mtuci.bbca.provider", tempZipDataFile);
+
+            writeDataTo(contentResolver.openOutputStream(tempZipDataUri))
+
+            val intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                type = "application/zip"
+                putExtra(Intent.EXTRA_STREAM, tempZipDataUri)
+            }
+
+            startActivity(
+                Intent.createChooser(intent,  null).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+            )
+        }
+
         // Set up textviews for debug
         textViewTouch = findViewById(R.id.textViewTouch)
         textViewAccelerometer = findViewById(R.id.textViewAccelerometer)
@@ -122,6 +136,22 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
         textViewTemperature = findViewById(R.id.textViewTemperature)
         textViewPressure = findViewById(R.id.textViewPressure)
         textViewHumidity = findViewById(R.id.textViewHumidity)
+    }
+
+    private fun writeDataTo(outputStream: OutputStream?) {
+        ZipOutputStream(BufferedOutputStream(outputStream)).use { zos ->
+            filesDir.walkTopDown()
+                .asSequence()
+                .filter { file -> file.absolutePath.contains("user_data") }
+                .forEach { file ->
+                    val zipFileName = file.absolutePath.removePrefix(filesDir.absolutePath).removePrefix("/")
+                    val entry = ZipEntry( "$zipFileName${(if (file.isDirectory) "/" else "" )}")
+                    zos.putNextEntry(entry)
+                    if (file.isFile) {
+                        file.inputStream().use { fis -> fis.copyTo(zos) }
+                    }
+                }
+        }
     }
 
     override fun onResume() {
