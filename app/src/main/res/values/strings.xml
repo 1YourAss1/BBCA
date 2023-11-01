@@ -10,6 +10,8 @@
     <string name="task_7">Задание 7</string>
     <string name="task_8">Задание 8</string>
     <string name="download_user_data">Выгрузить пользовательские данные</string>
+    <string name="start_new_session">Начать новую сессию</string>
+    <string name="new_session_success">Запущена новая сессия</string>
     <string name="keystroke_task">Введите текст минимум на 100 символов (например, опишите сюжет фильма или книги):</string>
     <string name="scroll_task">Прочитайте тест до конца</string>
     <string name="swipe_task">Пролистайте картинки: %1$d/50</string>

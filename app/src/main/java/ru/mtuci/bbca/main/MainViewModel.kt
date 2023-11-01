@@ -10,22 +10,14 @@ import java.io.File
 import java.io.FileOutputStream
 
 class MainViewModel : ViewModel() {
-    private var isSessionInitialized: Boolean = false
-
     var currentSessionPath: String = ""
         private set
 
-    fun initializeSession(
+    fun startNewSession(
         context: Context,
         sensorManager: SensorManager,
         identifier: String
     ) {
-        if (isSessionInitialized) {
-            return
-        }
-
-        isSessionInitialized = true
-
         val resources = context.resources
         currentSessionPath = "${context.filesDir}/user_data_$identifier"
         File(currentSessionPath).mkdirs()

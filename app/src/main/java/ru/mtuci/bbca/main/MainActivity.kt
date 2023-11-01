@@ -30,7 +30,6 @@ import ru.mtuci.bbca.scroll.ScrollActivity
 import ru.mtuci.bbca.video.VideoActivity
 import java.io.BufferedOutputStream
 import java.io.File
-import java.io.FilenameFilter
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
@@ -81,7 +80,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
         // Init sensor manager
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
-        viewModel.initializeSession(
+        viewModel.startNewSession(
             context = this,
             sensorManager = sensorManager,
             identifier = intent.getStringExtra("identifier") ?: "null"
@@ -100,6 +99,17 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
         findViewById<Button>(R.id.buttonVideo).setOnClickListener{ startActivity(Intent(this, VideoActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
         findViewById<Button>(R.id.buttonLongClicks).setOnClickListener{ startActivity(Intent(this, LongClickActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
         findViewById<Button>(R.id.buttonPaint).setOnClickListener{ startActivity(Intent(this, PaintActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
+
+        findViewById<Button>(R.id.buttonNewSession).setOnClickListener {
+            viewModel.startNewSession(
+                context = this,
+                sensorManager = sensorManager,
+                identifier = intent.getStringExtra("identifier") ?: "null"
+            )
+
+            Toast.makeText(this, R.string.new_session_success, Toast.LENGTH_LONG).show()
+        }
+
         // Set up textviews for debug
         textViewTouch = findViewById(R.id.textViewTouch)
         textViewAccelerometer = findViewById(R.id.textViewAccelerometer)
