@@ -1,11 +1,13 @@
 package ru.mtuci.bbca
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.otaliastudios.zoom.ZoomImageView
+import ru.mtuci.bbca.main.MainActivity
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
 
@@ -46,6 +48,14 @@ class ScaleActivity : AppCompatActivity() {
                 text =
                     "${resources.getText(R.string.scale_task)}: ${characterList[currentCharacter]}\n${if (!taskDone) currentCharacter else characterList.size}/${characterList.size}"
                 imageView.zoomTo(1.0F, true)
+
+                if (taskDone) {
+                    sendBroadcast(
+                        Intent(MainActivity.TASK_DONE_KEY).apply {
+                            putExtra(MainActivity.TASK_DONE_KEY, SCALE_TASK)
+                        }
+                    )
+                }
             }
         }
     }
@@ -87,5 +97,9 @@ class ScaleActivity : AppCompatActivity() {
         }
 
         return super.dispatchTouchEvent(event)
+    }
+
+    companion object {
+        const val SCALE_TASK = "SCALE_TASK"
     }
 }

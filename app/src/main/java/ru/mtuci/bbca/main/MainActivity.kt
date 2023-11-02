@@ -1,7 +1,9 @@
 package ru.mtuci.bbca.main
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -9,6 +11,7 @@ import android.hardware.SensorManager
 import android.location.Location
 import android.location.LocationListener
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.view.MotionEvent
@@ -17,10 +20,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import ru.mtuci.bbca.KeyStrokeActivity
 import ru.mtuci.bbca.R
 import ru.mtuci.bbca.ScaleActivity
@@ -67,31 +78,98 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
         }
     }
 
+    private val buttonKeyStroke by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<Button>(R.id.buttonKeyStroke)
+    }
+
+    private val buttonScroll by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<Button>(R.id.buttonScroll)
+    }
+
+    private val buttonSwipe by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<Button>(R.id.buttonSwipe)
+    }
+
+    private val buttonScale by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<Button>(R.id.buttonScale)
+    }
+
+    private val buttonClicks by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<Button>(R.id.buttonClicks)
+    }
+
+    private val buttonVideo by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<Button>(R.id.buttonVideo)
+    }
+
+    private val buttonLongClicks by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<Button>(R.id.buttonLongClicks)
+    }
+
+    private val buttonPaint by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<Button>(R.id.buttonPaint)
+    }
+
+    private val broadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent != null) {
+                when (intent.getStringExtra(TASK_DONE_KEY)) {
+                    KeyStrokeActivity.KEY_STROKE_TASK -> {
+                        viewModel.setKeyStrokeTaskDone()
+                    }
+                    ScaleActivity.SCALE_TASK -> {
+                        viewModel.setScaleTaskDone()
+                    }
+                    VideoActivity.VIDEO_TASK -> {
+                        viewModel.setVideoTaskDone()
+                    }
+                    SwipeActivity.SWIPE_TASK -> {
+                        viewModel.setSwipeTaskDone()
+                    }
+                    ScrollActivity.SCROLL_TASK -> {
+                        viewModel.setScrollTaskDone()
+                    }
+                    PaintActivity.PAINT_TASK -> {
+                        viewModel.setPaintTaskDone()
+                    }
+                    LongClickActivity.LONG_CLICKS_TASK -> {
+                        viewModel.setLongClicksTaskDone()
+                    }
+                    ClicksActivity.CLICKS_TASK -> {
+                        viewModel.setClicksTaskDone()
+                    }
+                }
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         // Init sensor manager
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
-        viewModel.startNewSession(
-            context = this,
-            sensorManager = sensorManager,
-            identifier = intent.getStringExtra("identifier") ?: "null"
-        )
+        if (savedInstanceState == null) {
+            viewModel.startNewSession(
+                context = this,
+                sensorManager = sensorManager,
+                identifier = intent.getStringExtra("identifier") ?: "null"
+            )
+        }
 
         // Set up buttons
         findViewById<FloatingActionButton>(R.id.buttonDownloadData).setOnClickListener {
             saveArchivedData.launch("user_data.zip")
         }
 
-        findViewById<Button>(R.id.buttonKeyStroke).setOnClickListener { startActivity(Intent(this, KeyStrokeActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
-        findViewById<Button>(R.id.buttonScroll).setOnClickListener { startActivity(Intent(this, ScrollActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
-        findViewById<Button>(R.id.buttonSwipe).setOnClickListener{ startActivity(Intent(this, SwipeActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
-        findViewById<Button>(R.id.buttonScale).setOnClickListener{ startActivity(Intent(this, ScaleActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
-        findViewById<Button>(R.id.buttonClicks).setOnClickListener{ startActivity(Intent(this, ClicksActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
-        findViewById<Button>(R.id.buttonVideo).setOnClickListener{ startActivity(Intent(this, VideoActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
-        findViewById<Button>(R.id.buttonLongClicks).setOnClickListener{ startActivity(Intent(this, LongClickActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
-        findViewById<Button>(R.id.buttonPaint).setOnClickListener{ startActivity(Intent(this, PaintActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
+        buttonKeyStroke.setOnClickListener { startActivity(Intent(this, KeyStrokeActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
+        buttonScroll.setOnClickListener { startActivity(Intent(this, ScrollActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
+        buttonSwipe.setOnClickListener{ startActivity(Intent(this, SwipeActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
+        buttonScale.setOnClickListener{ startActivity(Intent(this, ScaleActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
+        buttonClicks.setOnClickListener{ startActivity(Intent(this, ClicksActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
+        buttonVideo.setOnClickListener{ startActivity(Intent(this, VideoActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
+        buttonLongClicks.setOnClickListener{ startActivity(Intent(this, LongClickActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
+        buttonPaint.setOnClickListener{ startActivity(Intent(this, PaintActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
 
         findViewById<Button>(R.id.buttonNewSession).setOnClickListener {
             viewModel.startNewSession(
@@ -136,6 +214,40 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
         textViewTemperature = findViewById(R.id.textViewTemperature)
         textViewPressure = findViewById(R.id.textViewPressure)
         textViewHumidity = findViewById(R.id.textViewHumidity)
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.tasksState.collect { state ->
+                        buttonKeyStroke.setBackgroundColor(colorFromState(state.isKeyStrokeDone))
+                        buttonScroll.setBackgroundColor(colorFromState(state.isScrollDone))
+                        buttonSwipe.setBackgroundColor(colorFromState(state.isSwipeDone))
+                        buttonScale.setBackgroundColor(colorFromState(state.isScaleDone))
+                        buttonClicks.setBackgroundColor(colorFromState(state.isClicksDone))
+                        buttonVideo.setBackgroundColor(colorFromState(state.isVideoDone))
+                        buttonLongClicks.setBackgroundColor(colorFromState(state.isLongClicksDone))
+                        buttonPaint.setBackgroundColor(colorFromState(state.isPaintDone))
+                    }
+                }
+            }
+        }
+
+        ContextCompat.registerReceiver(
+            this,
+            broadcastReceiver,
+            IntentFilter(TASK_DONE_KEY),
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(broadcastReceiver)
+    }
+
+    @ColorInt
+    private fun colorFromState(isTaskDone: Boolean): Int {
+        return if (isTaskDone) getColor(R.color.done) else getColor(R.color.alert)
     }
 
     private fun writeDataTo(outputStream: OutputStream?) {
@@ -225,4 +337,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
         sensorManager.unregisterListener(this)
     }
 
+    companion object {
+        const val TASK_DONE_KEY = "TASK_DONE_KEY"
+    }
 }

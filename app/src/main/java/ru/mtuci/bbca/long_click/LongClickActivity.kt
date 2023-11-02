@@ -1,5 +1,6 @@
 package ru.mtuci.bbca.long_click
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
@@ -19,8 +20,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 import ru.mtuci.bbca.R
+import ru.mtuci.bbca.main.MainActivity
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
+import ru.mtuci.bbca.video.VideoActivity
 
 class LongClickActivity : AppCompatActivity() {
     private val viewModel: LongClickViewModel by viewModels()
@@ -73,6 +76,12 @@ class LongClickActivity : AppCompatActivity() {
                     viewModel.taskDoneSideEffect.collect {
                         Toast.makeText(this@LongClickActivity, R.string.task_successfully_done, Toast.LENGTH_SHORT)
                             .show()
+
+                        sendBroadcast(
+                            Intent(MainActivity.TASK_DONE_KEY).apply {
+                                putExtra(MainActivity.TASK_DONE_KEY, LONG_CLICKS_TASK)
+                            }
+                        )
                     }
                 }
 
@@ -164,5 +173,9 @@ class LongClickActivity : AppCompatActivity() {
         override fun areContentsTheSame(oldItem: AdapterItem, newItem: AdapterItem): Boolean {
             return oldItem == newItem
         }
+    }
+
+    companion object {
+        const val LONG_CLICKS_TASK = "LONG_CLICKS_TASK"
     }
 }

@@ -1,10 +1,12 @@
 package ru.mtuci.bbca
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
+import ru.mtuci.bbca.main.MainActivity
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
 
@@ -42,6 +44,17 @@ class KeyStrokeActivity : AppCompatActivity() {
                     listOf(System.currentTimeMillis(), resources.configuration.orientation, text.last().code, text.last())
                 )
             }
+            if (text.length >= 100) {
+                sendBroadcast(
+                    Intent(MainActivity.TASK_DONE_KEY).apply {
+                        putExtra(MainActivity.TASK_DONE_KEY, KEY_STROKE_TASK)
+                    }
+                )
+            }
         }
+    }
+
+    companion object {
+        const val KEY_STROKE_TASK = "KEY_STROKE_TASK"
     }
 }

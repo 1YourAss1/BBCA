@@ -1,5 +1,6 @@
 package ru.mtuci.bbca.paint
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.Button
@@ -12,8 +13,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
 import ru.mtuci.bbca.R
+import ru.mtuci.bbca.main.MainActivity
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
+import ru.mtuci.bbca.video.VideoActivity
 
 class PaintActivity : AppCompatActivity() {
     private val paintView by lazy(LazyThreadSafetyMode.NONE) {
@@ -76,6 +79,12 @@ class PaintActivity : AppCompatActivity() {
                     viewModel.taskDoneSideEffect.collect {
                         Toast.makeText(this@PaintActivity, R.string.task_successfully_done, Toast.LENGTH_SHORT)
                             .show()
+
+                        sendBroadcast(
+                            Intent(MainActivity.TASK_DONE_KEY).apply {
+                                putExtra(MainActivity.TASK_DONE_KEY, PAINT_TASK)
+                            }
+                        )
                     }
                 }
 
@@ -108,5 +117,9 @@ class PaintActivity : AppCompatActivity() {
         }
 
         return super.dispatchTouchEvent(event)
+    }
+
+    companion object {
+        const val PAINT_TASK = "PAINT_TASK"
     }
 }
