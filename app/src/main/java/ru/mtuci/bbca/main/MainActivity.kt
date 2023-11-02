@@ -110,6 +110,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
         findViewById<Button>(R.id.buttonPaint)
     }
 
+    private val sessionCounter by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<TextView>(R.id.sessionCounter)
+    }
+
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent != null) {
@@ -227,6 +231,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
                         buttonVideo.setBackgroundColor(colorFromState(state.isVideoDone))
                         buttonLongClicks.setBackgroundColor(colorFromState(state.isLongClicksDone))
                         buttonPaint.setBackgroundColor(colorFromState(state.isPaintDone))
+                    }
+                }
+
+                launch {
+                    viewModel.currentSessionNumber.collect { session ->
+                        sessionCounter.text = getString(R.string.session_counter, session)
                     }
                 }
             }
