@@ -16,6 +16,9 @@ class MainViewModel : ViewModel() {
     var currentSessionPath: String = ""
         private set
 
+    private var _currentSessionNumber = MutableStateFlow(0)
+    val currentSessionNumber = _currentSessionNumber.asStateFlow()
+
     private var _tasksState = MutableStateFlow(TasksState())
     val tasksState = _tasksState.asStateFlow()
 
@@ -48,10 +51,11 @@ class MainViewModel : ViewModel() {
         }
         // Create dir for new session
         if (File(currentSessionPath).listFiles()?.isNotEmpty() == true && File(currentSessionPath).listFiles().any { it.name.contains("session") }) {
-            val newSession = "session${
-                File(currentSessionPath).listFiles()?.last { it.name.contains("session") }?.name?.filter { it.isDigit() }?.toInt()?.inc()}"
+            _currentSessionNumber.value = File(currentSessionPath).listFiles()?.last { it.name.contains("session") }?.name?.filter { it.isDigit() }?.toInt()?.inc() ?: 1
+            val newSession = "session${currentSessionNumber.value}"
             if (File("$currentSessionPath/$newSession").mkdirs()) currentSessionPath = "$currentSessionPath/$newSession"
         } else {
+            _currentSessionNumber.value = 1
             if (File("$currentSessionPath/session1").mkdirs()) currentSessionPath = "$currentSessionPath/session1"
         }
     }

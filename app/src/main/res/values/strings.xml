@@ -80,4 +80,5 @@
     <string name="identifier_placeholder">ivanov_bvt0000</string>
     <string name="identifier_too_short">Минимум 6 символов</string>
     <string name="identifiers_matching_error">Идентификаторы не совпадают</string>
+    <string name="session_counter">Сессия %1$d/5</string>
 </resources>

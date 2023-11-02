@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context="ru.mtuci.bbca.main.MainActivity">
 
+    <TextView
+        android:id="@+id/sessionCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Сессия 0/5"
+        style="@style/Task"/>
 
     <TextView
         android:id="@+id/textViewTouch"
