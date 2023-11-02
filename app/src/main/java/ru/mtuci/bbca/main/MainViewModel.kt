@@ -4,6 +4,9 @@ import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -13,11 +16,15 @@ class MainViewModel : ViewModel() {
     var currentSessionPath: String = ""
         private set
 
+    private var _tasksState = MutableStateFlow(TasksState())
+    val tasksState = _tasksState.asStateFlow()
+
     fun startNewSession(
         context: Context,
         sensorManager: SensorManager,
         identifier: String
     ) {
+        _tasksState.value = TasksState()
         val resources = context.resources
         currentSessionPath = "${context.filesDir}/user_data_$identifier"
         File(currentSessionPath).mkdirs()
@@ -46,6 +53,54 @@ class MainViewModel : ViewModel() {
             if (File("$currentSessionPath/$newSession").mkdirs()) currentSessionPath = "$currentSessionPath/$newSession"
         } else {
             if (File("$currentSessionPath/session1").mkdirs()) currentSessionPath = "$currentSessionPath/session1"
+        }
+    }
+
+    fun setKeyStrokeTaskDone() {
+        _tasksState.update {
+            it.copy(isKeyStrokeDone = true)
+        }
+    }
+
+    fun setScrollTaskDone() {
+        _tasksState.update {
+            it.copy(isScrollDone = true)
+        }
+    }
+
+    fun setSwipeTaskDone() {
+        _tasksState.update {
+            it.copy(isSwipeDone = true)
+        }
+    }
+
+    fun setScaleTaskDone() {
+        _tasksState.update {
+            it.copy(isScaleDone = true)
+        }
+    }
+
+    fun setClicksTaskDone() {
+        _tasksState.update {
+            it.copy(isClicksDone = true)
+        }
+    }
+
+    fun setVideoTaskDone() {
+        _tasksState.update {
+            it.copy(isVideoDone = true)
+        }
+    }
+
+    fun setLongClicksTaskDone() {
+        _tasksState.update {
+            it.copy(isLongClicksDone = true)
+        }
+    }
+
+    fun setPaintTaskDone() {
+        _tasksState.update {
+            it.copy(isPaintDone = true)
         }
     }
 }

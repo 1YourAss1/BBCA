@@ -1,5 +1,6 @@
 package ru.mtuci.bbca.clicks
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.Button
@@ -16,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
 import ru.mtuci.bbca.R
+import ru.mtuci.bbca.main.MainActivity
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
 
@@ -93,6 +95,12 @@ class ClicksActivity : AppCompatActivity() {
                     viewModel.taskDoneSideEffect.collect {
                         Toast.makeText(this@ClicksActivity, R.string.task_successfully_done, Toast.LENGTH_SHORT)
                             .show()
+
+                        sendBroadcast(
+                            Intent(MainActivity.TASK_DONE_KEY).apply {
+                                putExtra(MainActivity.TASK_DONE_KEY, CLICKS_TASK)
+                            }
+                        )
                     }
                 }
             }
@@ -109,5 +117,9 @@ class ClicksActivity : AppCompatActivity() {
         }
 
         return super.dispatchTouchEvent(event)
+    }
+
+    companion object {
+        const val CLICKS_TASK = "CLICKS_TASK"
     }
 }

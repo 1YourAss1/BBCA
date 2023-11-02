@@ -2,16 +2,14 @@
 
 package ru.mtuci.bbca.video
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.Player.STATE_ENDED
@@ -20,6 +18,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import ru.mtuci.bbca.R
+import ru.mtuci.bbca.main.MainActivity
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
 
@@ -168,6 +167,12 @@ class VideoActivity : AppCompatActivity() {
                         R.string.task_successfully_done,
                         Toast.LENGTH_SHORT
                     ).show()
+
+                    sendBroadcast(
+                        Intent(MainActivity.TASK_DONE_KEY).apply {
+                            putExtra(MainActivity.TASK_DONE_KEY, VIDEO_TASK)
+                        }
+                    )
                 }
                 STATE_READY -> {
                     playerView.player = player
@@ -176,5 +181,8 @@ class VideoActivity : AppCompatActivity() {
                 else -> Unit
             }
         }
+    }
+    companion object {
+        const val VIDEO_TASK = "VIDEO_TASK"
     }
 }

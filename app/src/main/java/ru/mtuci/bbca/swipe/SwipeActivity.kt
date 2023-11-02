@@ -1,5 +1,6 @@
 package ru.mtuci.bbca.swipe
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.GestureDetector
@@ -16,6 +17,7 @@ import androidx.viewpager2.widget.ViewPager2
 import kotlinx.coroutines.launch
 import ru.mtuci.bbca.NumberAdapter
 import ru.mtuci.bbca.R
+import ru.mtuci.bbca.main.MainActivity
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
 
@@ -99,6 +101,12 @@ class SwipeActivity : FragmentActivity(),
                     viewModel.taskDoneSideEffect.collect {
                         Toast.makeText(this@SwipeActivity, R.string.task_successfully_done, Toast.LENGTH_SHORT)
                             .show()
+
+                        sendBroadcast(
+                            Intent(MainActivity.TASK_DONE_KEY).apply {
+                                putExtra(MainActivity.TASK_DONE_KEY, SWIPE_TASK)
+                            }
+                        )
                     }
                 }
             }
@@ -187,4 +195,8 @@ class SwipeActivity : FragmentActivity(),
 
     private fun timeMillisOf(eventMillis: Long) =
         System.currentTimeMillis() - SystemClock.uptimeMillis() + eventMillis
+
+    companion object {
+        const val SWIPE_TASK = "SWIPE_TASK"
+    }
 }
