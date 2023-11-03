@@ -17,6 +17,7 @@ import androidx.viewpager2.widget.ViewPager2
 import kotlinx.coroutines.launch
 import ru.mtuci.bbca.NumberAdapter
 import ru.mtuci.bbca.R
+import ru.mtuci.bbca.app_logger.CrashLogger
 import ru.mtuci.bbca.main.MainActivity
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
@@ -64,6 +65,8 @@ class SwipeActivity : FragmentActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Thread.setDefaultUncaughtExceptionHandler(CrashLogger(this))
 
         sensorsDataWriter(
             currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
