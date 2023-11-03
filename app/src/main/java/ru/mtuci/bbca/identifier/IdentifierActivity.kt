@@ -12,6 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
 import ru.mtuci.bbca.R
+import ru.mtuci.bbca.app_logger.CrashLogger
 import ru.mtuci.bbca.main.MainActivity
 
 class IdentifierActivity : AppCompatActivity() {
@@ -31,6 +32,8 @@ class IdentifierActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Thread.setDefaultUncaughtExceptionHandler(CrashLogger(this))
 
         setContentView(R.layout.activity_identifier)
 

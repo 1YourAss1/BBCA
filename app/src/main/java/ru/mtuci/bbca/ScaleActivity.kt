@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.otaliastudios.zoom.ZoomImageView
+import ru.mtuci.bbca.app_logger.CrashLogger
 import ru.mtuci.bbca.main.MainActivity
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
@@ -25,6 +26,8 @@ class ScaleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Thread.setDefaultUncaughtExceptionHandler(CrashLogger(this))
 
         sensorsDataWriter(
             currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),

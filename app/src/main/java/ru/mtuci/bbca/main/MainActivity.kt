@@ -36,6 +36,7 @@ import ru.mtuci.bbca.KeyStrokeActivity
 import ru.mtuci.bbca.R
 import ru.mtuci.bbca.ScaleActivity
 import ru.mtuci.bbca.Sensors
+import ru.mtuci.bbca.app_logger.CrashLogger
 import ru.mtuci.bbca.swipe.SwipeActivity
 import ru.mtuci.bbca.clicks.ClicksActivity
 import ru.mtuci.bbca.long_click.LongClickActivity
@@ -149,6 +150,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Thread.setDefaultUncaughtExceptionHandler(CrashLogger(this))
+
         setContentView(R.layout.activity_main)
         // Init sensor manager
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -264,7 +268,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
         ZipOutputStream(BufferedOutputStream(outputStream)).use { zos ->
             filesDir.walkTopDown()
                 .asSequence()
-                .filter { file -> file.absolutePath.contains("user_data") }
+                .filter { file -> file.absolutePath.contains("user_data") || file.endsWith(CrashLogger.FILE_NAME) }
                 .forEach { file ->
                     val zipFileName = file.absolutePath.removePrefix(filesDir.absolutePath).removePrefix("/")
                     val entry = ZipEntry( "$zipFileName${(if (file.isDirectory) "/" else "" )}")
