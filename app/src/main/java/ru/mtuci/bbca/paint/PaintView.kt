@@ -6,14 +6,10 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
-import android.os.Bundle
-import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import java.io.Serializable
 import kotlin.math.min
-import kotlin.math.roundToInt
 
 
 class PaintView @JvmOverloads constructor(
@@ -68,21 +64,4 @@ class PaintView @JvmOverloads constructor(
         }
         return true
     }
-
-    override fun onSaveInstanceState(): Parcelable {
-        return Bundle().apply {
-            putParcelable("super_state", super.onSaveInstanceState())
-            putSerializable("path", PathSavedStateWrapper(path))
-        }
-    }
-
-    override fun onRestoreInstanceState(state: Parcelable?) {
-        val state = state as? Bundle ?: return
-        path.set((state.getSerializable("path") as PathSavedStateWrapper).path)
-        super.onRestoreInstanceState(state.getParcelable("super_state"))
-    }
-
-    private data class PathSavedStateWrapper(
-        val path: Path
-    ) : Serializable
 }
