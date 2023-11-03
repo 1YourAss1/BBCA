@@ -36,6 +36,7 @@
             android:exported="false" />
         <activity
             android:name="ru.mtuci.bbca.paint.PaintActivity"
+            android:configChanges="orientation|screenSize|layoutDirection"
             android:exported="false" />
         <activity
             android:name=".identifier.IdentifierActivity"
