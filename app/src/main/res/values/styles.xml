@@ -2,7 +2,7 @@
 <resources>
     <style name="Debug" parent="TextAppearance.AppCompat">
         <!--    Make "visible" to debug    -->
-        <item name="android:visibility">visible</item>
+        <item name="android:visibility">gone</item>
         <item name="android:background">#BF5050</item>
         <item name="android:textSize">10sp</item>
     </style>
