@@ -17,7 +17,7 @@ class ScaleActivity : AppCompatActivity() {
 
     private val userActivityDataWriter by lazy(LazyThreadSafetyMode.NONE) {
         userActivityDataWriter(
-            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            currentSessionPath = Preferences.getSessionPath(),
             directoryName = "scale",
             activityName = "scale",
             activityColumns = listOf("timestamp", "orientation", "x1_coordinate", "y1_coordinate", "pressure1", "x2_coordinate", "y2_coordinate", "pressure2", "action_type")
@@ -30,7 +30,7 @@ class ScaleActivity : AppCompatActivity() {
         Thread.setDefaultUncaughtExceptionHandler(CrashLogger(this))
 
         sensorsDataWriter(
-            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            currentSessionPath = Preferences.getSessionPath(),
             directoryName = "scale",
         )
 

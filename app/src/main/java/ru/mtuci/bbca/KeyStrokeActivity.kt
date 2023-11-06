@@ -22,14 +22,14 @@ class KeyStrokeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_keystroke)
 
         val userActivityDataWriter = userActivityDataWriter(
-            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            currentSessionPath = Preferences.getSessionPath(),
             directoryName = "keystroke",
             activityName = "keystroke",
             activityColumns = listOf("timestamp", "orientation", "ascii", "letter")
         )
 
         sensorsDataWriter(
-            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            currentSessionPath = Preferences.getSessionPath(),
             directoryName = "keystroke",
         )
 

@@ -9,13 +9,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import org.json.JSONArray
 import org.json.JSONObject
+import ru.mtuci.bbca.Preferences
 import java.io.File
 import java.io.FileOutputStream
 
 class MainViewModel : ViewModel() {
-    var currentSessionPath: String = ""
-        private set
-
     private var _currentSessionNumber = MutableStateFlow(0)
     val currentSessionNumber = _currentSessionNumber.asStateFlow()
 
@@ -29,7 +27,7 @@ class MainViewModel : ViewModel() {
     ) {
         _tasksState.value = TasksState()
         val resources = context.resources
-        currentSessionPath = "${context.filesDir}/user_data_$identifier"
+        var currentSessionPath = "${context.filesDir}/user_data_$identifier"
         File(currentSessionPath).mkdirs()
         // Create info data
         val jsonInfoFile = File(currentSessionPath + File.separator + "info.json")
@@ -49,15 +47,24 @@ class MainViewModel : ViewModel() {
             jsonInfo.put("sensors", JSONArray(sensorManager.getSensorList(Sensor.TYPE_ALL).map { sensor -> JSONObject("{\"name\": \"${sensor.name}\", \"vendor\": \"${sensor.vendor}\"}") }))
             FileOutputStream(jsonInfoFile).write(jsonInfo.toString().toByteArray())
         }
-        // Create dir for new session
-        if (File(currentSessionPath).listFiles()?.isNotEmpty() == true && File(currentSessionPath).listFiles().any { it.name.contains("session") }) {
-            _currentSessionNumber.value = File(currentSessionPath).listFiles()?.last { it.name.contains("session") }?.name?.filter { it.isDigit() }?.toInt()?.inc() ?: 1
-            val newSession = "session${currentSessionNumber.value}"
-            if (File("$currentSessionPath/$newSession").mkdirs()) currentSessionPath = "$currentSessionPath/$newSession"
+
+        val lastSessionPath = Preferences.getSessionPath()
+
+        val lastSessionNumber = if (lastSessionPath.startsWith(currentSessionPath)) {
+            lastSessionPath
+                .substringAfterLast("session")
+                .toIntOrNull() ?: 0
         } else {
-            _currentSessionNumber.value = 1
-            if (File("$currentSessionPath/session1").mkdirs()) currentSessionPath = "$currentSessionPath/session1"
+            0
         }
+
+        val newSessionNumber = lastSessionNumber + 1
+
+        currentSessionPath = "$currentSessionPath/session$newSessionNumber"
+
+        File(currentSessionPath).mkdirs()
+
+        Preferences.saveSessionPath(currentSessionPath)
     }
 
     fun setKeyStrokeTaskDone() {

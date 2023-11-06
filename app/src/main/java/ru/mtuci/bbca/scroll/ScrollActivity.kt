@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
+import ru.mtuci.bbca.Preferences
 import ru.mtuci.bbca.R
 import ru.mtuci.bbca.app_logger.CrashLogger
 import ru.mtuci.bbca.main.MainActivity
@@ -26,7 +27,7 @@ class ScrollActivity : AppCompatActivity() {
 
     private val userActivityDataWriter by lazy(LazyThreadSafetyMode.NONE) {
         userActivityDataWriter(
-            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            currentSessionPath = Preferences.getSessionPath(),
             directoryName = "scroll",
             activityName = "scroll",
             activityColumns = listOf("timestamp", "orientation", "x_coordinate", "y_coordinate", "pressure", "action")
@@ -39,7 +40,7 @@ class ScrollActivity : AppCompatActivity() {
         Thread.setDefaultUncaughtExceptionHandler(CrashLogger(this))
 
         sensorsDataWriter(
-            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            currentSessionPath = Preferences.getSessionPath(),
             directoryName = "scroll",
         )
 

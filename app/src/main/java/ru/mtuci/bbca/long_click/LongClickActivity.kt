@@ -19,12 +19,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
+import ru.mtuci.bbca.Preferences
 import ru.mtuci.bbca.R
 import ru.mtuci.bbca.app_logger.CrashLogger
 import ru.mtuci.bbca.main.MainActivity
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
-import ru.mtuci.bbca.video.VideoActivity
 
 class LongClickActivity : AppCompatActivity() {
     private val viewModel: LongClickViewModel by viewModels()
@@ -45,7 +45,7 @@ class LongClickActivity : AppCompatActivity() {
 
     private val userActivityDataWriter by lazy(LazyThreadSafetyMode.NONE) {
         userActivityDataWriter(
-            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            currentSessionPath = Preferences.getSessionPath(),
             directoryName = "long_clicks",
             activityName = "long_clicks",
             activityColumns = listOf("timestamp", "orientation", "x_coordinate", "y_coordinate", "pressure", "action_type")
@@ -60,7 +60,7 @@ class LongClickActivity : AppCompatActivity() {
         setContentView(R.layout.activity_long_click)
 
         sensorsDataWriter(
-            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            currentSessionPath = Preferences.getSessionPath(),
             directoryName = "long_clicks",
         )
 
