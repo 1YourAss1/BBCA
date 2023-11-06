@@ -75,7 +75,7 @@ class SwipeActivity : FragmentActivity(),
 
         setContentView(R.layout.activity_swipe)
 
-        val ranInts = (0..941).shuffled().take(50).toIntArray()
+        val ranInts = (0..941).toList().toIntArray()
         val adapter = NumberAdapter(this, ranInts)
         viewPager.adapter = adapter
 
