@@ -10,8 +10,6 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.Location
 import android.location.LocationListener
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.view.MotionEvent
@@ -21,27 +19,24 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.mtuci.bbca.KeyStrokeActivity
 import ru.mtuci.bbca.R
 import ru.mtuci.bbca.ScaleActivity
 import ru.mtuci.bbca.Sensors
 import ru.mtuci.bbca.app_logger.CrashLogger
-import ru.mtuci.bbca.swipe.SwipeActivity
 import ru.mtuci.bbca.clicks.ClicksActivity
 import ru.mtuci.bbca.long_click.LongClickActivity
 import ru.mtuci.bbca.paint.PaintActivity
 import ru.mtuci.bbca.scroll.ScrollActivity
+import ru.mtuci.bbca.swipe.SwipeActivity
 import ru.mtuci.bbca.video.VideoActivity
 import java.io.BufferedOutputStream
 import java.io.File
@@ -170,14 +165,37 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
             saveArchivedData.launch("user_data.zip")
         }
 
-        buttonKeyStroke.setOnClickListener { startActivity(Intent(this, KeyStrokeActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
-        buttonScroll.setOnClickListener { startActivity(Intent(this, ScrollActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
-        buttonSwipe.setOnClickListener{ startActivity(Intent(this, SwipeActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
-        buttonScale.setOnClickListener{ startActivity(Intent(this, ScaleActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
-        buttonClicks.setOnClickListener{ startActivity(Intent(this, ClicksActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
-        buttonVideo.setOnClickListener{ startActivity(Intent(this, VideoActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
-        buttonLongClicks.setOnClickListener{ startActivity(Intent(this, LongClickActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
-        buttonPaint.setOnClickListener{ startActivity(Intent(this, PaintActivity::class.java).putExtra("currentSessionPath", viewModel.currentSessionPath)) }
+        buttonKeyStroke.setOnClickListener {
+            startActivity(Intent(this, KeyStrokeActivity::class.java))
+        }
+
+        buttonScroll.setOnClickListener {
+            startActivity(Intent(this, ScrollActivity::class.java))
+        }
+
+        buttonSwipe.setOnClickListener{
+            startActivity(Intent(this, SwipeActivity::class.java))
+        }
+
+        buttonScale.setOnClickListener{
+            startActivity(Intent(this, ScaleActivity::class.java))
+        }
+
+        buttonClicks.setOnClickListener{
+            startActivity(Intent(this, ClicksActivity::class.java))
+        }
+
+        buttonVideo.setOnClickListener{
+            startActivity(Intent(this, VideoActivity::class.java))
+        }
+
+        buttonLongClicks.setOnClickListener{
+            startActivity(Intent(this, LongClickActivity::class.java))
+        }
+
+        buttonPaint.setOnClickListener{
+            startActivity(Intent(this, PaintActivity::class.java))
+        }
 
         findViewById<Button>(R.id.buttonNewSession).setOnClickListener {
             viewModel.startNewSession(

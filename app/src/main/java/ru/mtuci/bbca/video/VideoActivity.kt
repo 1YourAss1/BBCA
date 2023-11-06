@@ -17,6 +17,7 @@ import androidx.media3.common.Player.STATE_READY
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
+import ru.mtuci.bbca.Preferences
 import ru.mtuci.bbca.R
 import ru.mtuci.bbca.main.MainActivity
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
@@ -43,7 +44,7 @@ class VideoActivity : AppCompatActivity() {
 
     private val userActivityDataWriter by lazy(LazyThreadSafetyMode.NONE) {
         userActivityDataWriter(
-            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            currentSessionPath = Preferences.getSessionPath(),
             directoryName = "video",
             activityName = "video",
             activityColumns = listOf("timestamp", "orientation", "x_coordinate", "y_coordinate", "pressure", "action_type")
@@ -56,7 +57,7 @@ class VideoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_video)
 
         sensorsDataWriter(
-            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            currentSessionPath = Preferences.getSessionPath(),
             directoryName = "video",
         )
 

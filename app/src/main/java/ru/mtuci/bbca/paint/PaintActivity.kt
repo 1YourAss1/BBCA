@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
+import ru.mtuci.bbca.Preferences
 import ru.mtuci.bbca.R
 import ru.mtuci.bbca.app_logger.CrashLogger
 import ru.mtuci.bbca.main.MainActivity
@@ -36,7 +37,7 @@ class PaintActivity : AppCompatActivity() {
     }
 
     private val currentSessionPath by lazy(LazyThreadSafetyMode.NONE) {
-        intent.getStringExtra("currentSessionPath").toString()
+        Preferences.getSessionPath()
     }
 
     private val currentSessionNumber by lazy(LazyThreadSafetyMode.NONE) {
@@ -62,7 +63,7 @@ class PaintActivity : AppCompatActivity() {
         setContentView(R.layout.activity_paint)
 
         sensorsDataWriter(
-            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            currentSessionPath = Preferences.getSessionPath(),
             directoryName = "paint",
         )
 

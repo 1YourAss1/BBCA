@@ -16,6 +16,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.widget.ViewPager2
 import kotlinx.coroutines.launch
 import ru.mtuci.bbca.NumberAdapter
+import ru.mtuci.bbca.Preferences
 import ru.mtuci.bbca.R
 import ru.mtuci.bbca.app_logger.CrashLogger
 import ru.mtuci.bbca.main.MainActivity
@@ -27,7 +28,7 @@ class SwipeActivity : FragmentActivity(),
 
     private val swipeActivityDataWriter by lazy(LazyThreadSafetyMode.NONE) {
         userActivityDataWriter(
-            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            currentSessionPath = Preferences.getSessionPath(),
             directoryName = "swipe",
             activityName = "swipe",
             activityColumns = listOf("timestamp", "orientation", "x_coordinate", "y_coordinate", "pressure", "action")
@@ -36,7 +37,7 @@ class SwipeActivity : FragmentActivity(),
 
     private val doubleClickActivityDataWriter by lazy(LazyThreadSafetyMode.NONE) {
         userActivityDataWriter(
-            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            currentSessionPath = Preferences.getSessionPath(),
             directoryName = "swipe",
             activityName = "double_click",
             activityColumns = listOf("timestamp", "orientation", "x_coordinate", "y_coordinate", "pressure", "click_number")
@@ -69,13 +70,13 @@ class SwipeActivity : FragmentActivity(),
         Thread.setDefaultUncaughtExceptionHandler(CrashLogger(this))
 
         sensorsDataWriter(
-            currentSessionPath = intent.getStringExtra("currentSessionPath").toString(),
+            currentSessionPath = Preferences.getSessionPath(),
             directoryName = "swipe",
         )
 
         setContentView(R.layout.activity_swipe)
 
-        val ranInts = (0..941).toList().toIntArray()
+        val ranInts = (0..941).shuffled().take(50).toIntArray()
         val adapter = NumberAdapter(this, ranInts)
         viewPager.adapter = adapter
 
