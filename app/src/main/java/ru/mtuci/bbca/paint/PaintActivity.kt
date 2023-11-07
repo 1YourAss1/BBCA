@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import ru.mtuci.bbca.Preferences
 import ru.mtuci.bbca.R
 import ru.mtuci.bbca.app_logger.CrashLogger
+import ru.mtuci.bbca.app_logger.catchWithPayload
 import ru.mtuci.bbca.main.MainActivity
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
@@ -41,7 +42,9 @@ class PaintActivity : AppCompatActivity() {
     }
 
     private val currentSessionNumber by lazy(LazyThreadSafetyMode.NONE) {
-        currentSessionPath.split("session")[1]
+        catchWithPayload("currentSessionPath = $currentSessionPath") {
+            currentSessionPath.split("session")[1]
+        }
     }
 
     private val userActivityDataWriter by lazy(LazyThreadSafetyMode.NONE) {

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import ru.mtuci.bbca.app_logger.catchWithPayload
 
 
 const val ARG_OBJECT = "object"
@@ -26,9 +27,13 @@ class NumberFragment : Fragment() {
         arguments?.takeIf { it.containsKey(ARG_OBJECT) }?.apply {
             val imageView: ImageView = view.findViewById(R.id.imageView)
 
-            Glide.with(requireContext())
-                .load(Uri.parse("file:///android_asset/meme_${getInt(ARG_OBJECT)}.jpg"))
-                .into(imageView)
+            val memeNumber = getInt(ARG_OBJECT)
+
+            catchWithPayload("meme is: $memeNumber") {
+                Glide.with(requireContext())
+                    .load(Uri.parse("file:///android_asset/meme_${memeNumber}.jpg"))
+                    .into(imageView)
+            }
         }
     }
 
