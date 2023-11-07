@@ -1,12 +1,13 @@
 package ru.mtuci.bbca
 
-import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 
 
 const val ARG_OBJECT = "object"
@@ -24,11 +25,10 @@ class NumberFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         arguments?.takeIf { it.containsKey(ARG_OBJECT) }?.apply {
             val imageView: ImageView = view.findViewById(R.id.imageView)
-            resources.assets.open("meme_${getInt(ARG_OBJECT)}.jpg").use { inputStream ->
-                Drawable.createFromStream(inputStream, null)?.let {
-                    imageView.setImageDrawable(it)
-                }
-            }
+
+            Glide.with(requireContext())
+                .load(Uri.parse("file:///android_asset/meme_${getInt(ARG_OBJECT)}.jpg"))
+                .into(imageView)
         }
     }
 
