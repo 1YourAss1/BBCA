@@ -59,6 +59,7 @@ class MainViewModel : ViewModel() {
         }
 
         val newSessionNumber = lastSessionNumber + 1
+        _currentSessionNumber.value = newSessionNumber
 
         currentSessionPath = "$currentSessionPath/session$newSessionNumber"
 
