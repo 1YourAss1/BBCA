@@ -16,6 +16,7 @@ import android.view.MotionEvent
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.ColorInt
@@ -159,6 +160,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
                 identifier = intent.getStringExtra("identifier") ?: "null"
             )
         }
+
+        onBackPressedDispatcher.addCallback(
+            owner = this,
+            onBackPressedCallback = object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    moveTaskToBack(true)
+                }
+            }
+        )
 
         // Set up buttons
         findViewById<FloatingActionButton>(R.id.buttonDownloadData).setOnClickListener {
