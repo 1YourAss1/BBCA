@@ -12,10 +12,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
-import ru.mtuci.bbca.Preferences
+import ru.mtuci.bbca.data.Preferences
 import ru.mtuci.bbca.R
 import ru.mtuci.bbca.app_logger.CrashLogger
 import ru.mtuci.bbca.app_logger.catchWithPayload
+import ru.mtuci.bbca.data.Task
 import ru.mtuci.bbca.main.MainActivity
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
@@ -88,7 +89,7 @@ class PaintActivity : AppCompatActivity() {
 
                         sendBroadcast(
                             Intent(MainActivity.TASK_DONE_KEY).apply {
-                                putExtra(MainActivity.TASK_DONE_KEY, PAINT_TASK)
+                                putExtra(MainActivity.TASK_DONE_KEY, Task.PAINT)
                             }
                         )
                     }
@@ -123,9 +124,5 @@ class PaintActivity : AppCompatActivity() {
         }
 
         return super.dispatchTouchEvent(event)
-    }
-
-    companion object {
-        const val PAINT_TASK = "PAINT_TASK"
     }
 }

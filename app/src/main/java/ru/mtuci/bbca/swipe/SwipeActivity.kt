@@ -16,9 +16,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.widget.ViewPager2
 import kotlinx.coroutines.launch
 import ru.mtuci.bbca.NumberAdapter
-import ru.mtuci.bbca.Preferences
+import ru.mtuci.bbca.data.Preferences
 import ru.mtuci.bbca.R
 import ru.mtuci.bbca.app_logger.CrashLogger
+import ru.mtuci.bbca.data.Task
 import ru.mtuci.bbca.main.MainActivity
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
@@ -107,7 +108,7 @@ class SwipeActivity : FragmentActivity(),
 
                         sendBroadcast(
                             Intent(MainActivity.TASK_DONE_KEY).apply {
-                                putExtra(MainActivity.TASK_DONE_KEY, SWIPE_TASK)
+                                putExtra(MainActivity.TASK_DONE_KEY, Task.SWIPE)
                             }
                         )
                     }
@@ -198,8 +199,4 @@ class SwipeActivity : FragmentActivity(),
 
     private fun timeMillisOf(eventMillis: Long) =
         System.currentTimeMillis() - SystemClock.uptimeMillis() + eventMillis
-
-    companion object {
-        const val SWIPE_TASK = "SWIPE_TASK"
-    }
 }

@@ -26,6 +26,7 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.viewmodel.MutableCreationExtras
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import ru.mtuci.bbca.KeyStrokeActivity
@@ -34,10 +35,12 @@ import ru.mtuci.bbca.ScaleActivity
 import ru.mtuci.bbca.Sensors
 import ru.mtuci.bbca.app_logger.CrashLogger
 import ru.mtuci.bbca.clicks.ClicksActivity
+import ru.mtuci.bbca.data.Task
 import ru.mtuci.bbca.long_click.LongClickActivity
 import ru.mtuci.bbca.paint.PaintActivity
 import ru.mtuci.bbca.scroll.ScrollActivity
 import ru.mtuci.bbca.swipe.SwipeActivity
+import ru.mtuci.bbca.utils.getSerializableCompat
 import ru.mtuci.bbca.video.VideoActivity
 import java.io.BufferedOutputStream
 import java.io.File
@@ -57,9 +60,32 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
     private lateinit var textViewTemperature: TextView
     private lateinit var textViewPressure: TextView
     private lateinit var textViewHumidity: TextView
-    private lateinit var sensorManager: SensorManager
 
-    private val viewModel: MainViewModel by viewModels()
+    private val sensorManager: SensorManager by lazy(LazyThreadSafetyMode.NONE) {
+        getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    }
+
+    private val viewModel: MainViewModel by viewModels(
+        extrasProducer = {
+             MutableCreationExtras().apply {
+                 set(
+                     key = MainViewModel.IdentifierKey,
+                     t = requireNotNull(intent.getStringExtra("identifier"))
+                 )
+
+                 set(
+                     key = MainViewModel.AppContextKey,
+                     t = applicationContext
+                 )
+
+                 set(
+                     key = MainViewModel.SensorsKey,
+                     t = sensorManager.getSensorList(Sensor.TYPE_ALL)
+                 )
+             }
+        },
+        factoryProducer = { MainViewModel.factory }
+    )
 
     private val saveArchivedData = registerForActivityResult(
         ActivityResultContracts.CreateDocument("application/zip")
@@ -113,33 +139,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
 
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent != null) {
-                when (intent.getStringExtra(TASK_DONE_KEY)) {
-                    KeyStrokeActivity.KEY_STROKE_TASK -> {
-                        viewModel.setKeyStrokeTaskDone()
-                    }
-                    ScaleActivity.SCALE_TASK -> {
-                        viewModel.setScaleTaskDone()
-                    }
-                    VideoActivity.VIDEO_TASK -> {
-                        viewModel.setVideoTaskDone()
-                    }
-                    SwipeActivity.SWIPE_TASK -> {
-                        viewModel.setSwipeTaskDone()
-                    }
-                    ScrollActivity.SCROLL_TASK -> {
-                        viewModel.setScrollTaskDone()
-                    }
-                    PaintActivity.PAINT_TASK -> {
-                        viewModel.setPaintTaskDone()
-                    }
-                    LongClickActivity.LONG_CLICKS_TASK -> {
-                        viewModel.setLongClicksTaskDone()
-                    }
-                    ClicksActivity.CLICKS_TASK -> {
-                        viewModel.setClicksTaskDone()
-                    }
-                }
+            val doneTask = intent?.extras?.getSerializableCompat<Task>(TASK_DONE_KEY)
+
+            if (doneTask != null) {
+                viewModel.setTaskDone(doneTask)
             }
         }
     }
@@ -150,16 +153,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
         Thread.setDefaultUncaughtExceptionHandler(CrashLogger(this))
 
         setContentView(R.layout.activity_main)
-        // Init sensor manager
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-
-        if (savedInstanceState == null) {
-            viewModel.startNewSession(
-                context = this,
-                sensorManager = sensorManager,
-                identifier = intent.getStringExtra("identifier") ?: "null"
-            )
-        }
 
         onBackPressedDispatcher.addCallback(
             owner = this,
@@ -208,12 +201,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
         }
 
         findViewById<Button>(R.id.buttonNewSession).setOnClickListener {
-            viewModel.startNewSession(
-                context = this,
-                sensorManager = sensorManager,
-                identifier = intent.getStringExtra("identifier") ?: "null"
-            )
-
+            viewModel.startNewSession()
             Toast.makeText(this, R.string.new_session_success, Toast.LENGTH_LONG).show()
         }
 
@@ -255,14 +243,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.tasksState.collect { state ->
-                        buttonKeyStroke.setBackgroundColor(colorFromState(state.isKeyStrokeDone))
-                        buttonScroll.setBackgroundColor(colorFromState(state.isScrollDone))
-                        buttonSwipe.setBackgroundColor(colorFromState(state.isSwipeDone))
-                        buttonScale.setBackgroundColor(colorFromState(state.isScaleDone))
-                        buttonClicks.setBackgroundColor(colorFromState(state.isClicksDone))
-                        buttonVideo.setBackgroundColor(colorFromState(state.isVideoDone))
-                        buttonLongClicks.setBackgroundColor(colorFromState(state.isLongClicksDone))
-                        buttonPaint.setBackgroundColor(colorFromState(state.isPaintDone))
+                        state.forEach { (task, isDone) ->
+                            buttonFromTask(task).setBackgroundColor(colorFromState(isDone))
+                        }
                     }
                 }
 
@@ -285,6 +268,17 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LocationListener 
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(broadcastReceiver)
+    }
+
+    private fun buttonFromTask(task: Task): Button = when (task) {
+        Task.KEY_STROKE -> buttonKeyStroke
+        Task.SCROLL -> buttonScroll
+        Task.SWIPE -> buttonSwipe
+        Task.SCALE -> buttonScale
+        Task.CLICKS -> buttonClicks
+        Task.VIDEO -> buttonVideo
+        Task.LONG_CLICKS -> buttonLongClicks
+        Task.PAINT -> buttonPaint
     }
 
     @ColorInt
