@@ -17,8 +17,9 @@ import androidx.media3.common.Player.STATE_READY
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
-import ru.mtuci.bbca.Preferences
+import ru.mtuci.bbca.data.Preferences
 import ru.mtuci.bbca.R
+import ru.mtuci.bbca.data.Task
 import ru.mtuci.bbca.main.MainActivity
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
@@ -171,7 +172,7 @@ class VideoActivity : AppCompatActivity() {
 
                     sendBroadcast(
                         Intent(MainActivity.TASK_DONE_KEY).apply {
-                            putExtra(MainActivity.TASK_DONE_KEY, VIDEO_TASK)
+                            putExtra(MainActivity.TASK_DONE_KEY, Task.VIDEO)
                         }
                     )
                 }
@@ -182,8 +183,5 @@ class VideoActivity : AppCompatActivity() {
                 else -> Unit
             }
         }
-    }
-    companion object {
-        const val VIDEO_TASK = "VIDEO_TASK"
     }
 }

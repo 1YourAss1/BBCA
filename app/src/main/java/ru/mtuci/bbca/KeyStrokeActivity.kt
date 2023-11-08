@@ -7,6 +7,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import ru.mtuci.bbca.app_logger.CrashLogger
+import ru.mtuci.bbca.data.Preferences
+import ru.mtuci.bbca.data.Task
 import ru.mtuci.bbca.main.MainActivity
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
@@ -51,14 +53,10 @@ class KeyStrokeActivity : AppCompatActivity() {
             if (text.length >= 100) {
                 sendBroadcast(
                     Intent(MainActivity.TASK_DONE_KEY).apply {
-                        putExtra(MainActivity.TASK_DONE_KEY, KEY_STROKE_TASK)
+                        putExtra(MainActivity.TASK_DONE_KEY, Task.KEY_STROKE)
                     }
                 )
             }
         }
-    }
-
-    companion object {
-        const val KEY_STROKE_TASK = "KEY_STROKE_TASK"
     }
 }

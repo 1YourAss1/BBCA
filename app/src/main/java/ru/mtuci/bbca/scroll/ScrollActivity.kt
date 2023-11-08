@@ -12,9 +12,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
-import ru.mtuci.bbca.Preferences
+import ru.mtuci.bbca.data.Preferences
 import ru.mtuci.bbca.R
 import ru.mtuci.bbca.app_logger.CrashLogger
+import ru.mtuci.bbca.data.Task
 import ru.mtuci.bbca.main.MainActivity
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
@@ -61,7 +62,7 @@ class ScrollActivity : AppCompatActivity() {
 
                     sendBroadcast(
                         Intent(MainActivity.TASK_DONE_KEY).apply {
-                            putExtra(MainActivity.TASK_DONE_KEY, SCROLL_TASK)
+                            putExtra(MainActivity.TASK_DONE_KEY, Task.SCROLL)
                         }
                     )
                 }
@@ -90,9 +91,5 @@ class ScrollActivity : AppCompatActivity() {
         }
 
         return super.dispatchTouchEvent(event)
-    }
-
-    companion object {
-        const val SCROLL_TASK = "SCROLL_TASK"
     }
 }

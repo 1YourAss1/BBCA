@@ -19,9 +19,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
-import ru.mtuci.bbca.Preferences
+import ru.mtuci.bbca.data.Preferences
 import ru.mtuci.bbca.R
 import ru.mtuci.bbca.app_logger.CrashLogger
+import ru.mtuci.bbca.data.Task
 import ru.mtuci.bbca.main.MainActivity
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
@@ -82,7 +83,7 @@ class LongClickActivity : AppCompatActivity() {
 
                         sendBroadcast(
                             Intent(MainActivity.TASK_DONE_KEY).apply {
-                                putExtra(MainActivity.TASK_DONE_KEY, LONG_CLICKS_TASK)
+                                putExtra(MainActivity.TASK_DONE_KEY, Task.LONG_CLICKS)
                             }
                         )
                     }
@@ -176,9 +177,5 @@ class LongClickActivity : AppCompatActivity() {
         override fun areContentsTheSame(oldItem: AdapterItem, newItem: AdapterItem): Boolean {
             return oldItem == newItem
         }
-    }
-
-    companion object {
-        const val LONG_CLICKS_TASK = "LONG_CLICKS_TASK"
     }
 }
