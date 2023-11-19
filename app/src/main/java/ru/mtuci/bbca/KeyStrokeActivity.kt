@@ -27,7 +27,7 @@ class KeyStrokeActivity : AppCompatActivity() {
             currentSessionPath = Preferences.getSessionPath(),
             directoryName = "keystroke",
             activityName = "keystroke",
-            activityColumns = listOf("timestamp", "orientation", "ascii", "letter")
+            activityColumns = listOf("timestamp", "orientation", "ascii")
         )
 
         sensorsDataWriter(
@@ -42,12 +42,12 @@ class KeyStrokeActivity : AppCompatActivity() {
             textViewKeystroke.text = "${getString(R.string.keystroke_task)} ${if(text?.length!! <= 100) text?.length!! else 100}/100"
             if (before == 1) {
                 userActivityDataWriter.writeActivity(
-                    listOf(System.currentTimeMillis(), resources.configuration.orientation, "8", "del")
+                    listOf(System.currentTimeMillis(), resources.configuration.orientation, "8")
                 )
             }
             if (count == 1) {
                 userActivityDataWriter.writeActivity(
-                    listOf(System.currentTimeMillis(), resources.configuration.orientation, text.last().code, text.last())
+                    listOf(System.currentTimeMillis(), resources.configuration.orientation, text.last().code)
                 )
             }
             if (text.length >= 100) {

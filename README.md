@@ -42,4 +42,4 @@
 - sensor_prox.csv: [timestamp, orientation, sensor_data]
 - sensor_temp.csv: [timestamp, orientation, sensor_data]
 - sensor_pres.csv: [timestamp, orientation, sensor_data]
-- sensor_humd.csv: [timestamp, orientation, sensor_data]
+- sensor_hum.csv: [timestamp, orientation, sensor_data]
