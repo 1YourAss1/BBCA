@@ -2,6 +2,8 @@ package ru.mtuci.bbca
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputFilter
+import android.text.Spanned
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -38,7 +40,28 @@ class KeyStrokeActivity : AppCompatActivity() {
         textViewKeystroke = findViewById(R.id.textViewKeystroke)
         textViewKeystroke.text = "${getString(R.string.keystroke_task)} 0/100"
 
-        findViewById<EditText>(R.id.editTextKeystroke).doOnTextChanged { text, start, before, count ->
+        val editTextKeystroke = findViewById<EditText>(R.id.editTextKeystroke)
+        
+        editTextKeystroke.filters = arrayOf(
+            object : InputFilter {
+                override fun filter(
+                    source: CharSequence?,
+                    start: Int,
+                    end: Int,
+                    dest: Spanned?,
+                    dstart: Int,
+                    dend: Int
+                ): CharSequence? {
+                    if (end - start > 1) {
+                        return dest?.subSequence(dstart, dend)
+                    }
+
+                    return null
+                }
+            }
+        )
+
+        editTextKeystroke.doOnTextChanged { text, start, before, count ->
             textViewKeystroke.text = "${getString(R.string.keystroke_task)} ${if(text?.length!! <= 100) text?.length!! else 100}/100"
             if (before == 1) {
                 userActivityDataWriter.writeActivity(
