@@ -14,6 +14,7 @@ import ru.mtuci.bbca.data.Task
 import ru.mtuci.bbca.main.MainActivity
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
+import kotlin.math.abs
 
 class KeyStrokeActivity : AppCompatActivity() {
     private lateinit var textViewKeystroke: TextView
@@ -52,8 +53,14 @@ class KeyStrokeActivity : AppCompatActivity() {
                     dstart: Int,
                     dend: Int
                 ): CharSequence? {
-                    if (end - start > 1) {
-                        return dest?.subSequence(dstart, dend)
+                    val newDest = dest?.replaceRange(dstart, dend, source ?: "")
+
+                    if (newDest.isNullOrBlank()) {
+                        return null
+                    }
+
+                    if (abs((newDest.length) - (dest.length)) > 1) {
+                        return dest.subSequence(dstart, dend)
                     }
 
                     return null
