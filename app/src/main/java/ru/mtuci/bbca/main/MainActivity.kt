@@ -31,7 +31,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import ru.mtuci.bbca.KeyStrokeActivity
 import ru.mtuci.bbca.R
-import ru.mtuci.bbca.ScaleActivity
+import ru.mtuci.bbca.scale.ScaleActivity
 import ru.mtuci.bbca.Sensors
 import ru.mtuci.bbca.app_logger.CrashLogger
 import ru.mtuci.bbca.clicks.ClicksActivity
