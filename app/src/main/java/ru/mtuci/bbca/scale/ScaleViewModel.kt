@@ -21,6 +21,9 @@ class ScaleViewModel(
     private val _taskDoneSideEffect = Channel<Unit>(Channel.BUFFERED)
     val taskDoneSideEffect = _taskDoneSideEffect.receiveAsFlow()
 
+    private val _findCharacterSideEffect = Channel<Unit>(Channel.BUFFERED)
+    val findCharacterSideEffect = _findCharacterSideEffect.receiveAsFlow()
+
     private var isLookupLocationChanged: Boolean = false
 
     val progress = _progress.map { index ->
@@ -37,6 +40,10 @@ class ScaleViewModel(
 
     fun onCharacterClick() {
         if (!isLookupLocationChanged) {
+            viewModelScope.launch {
+                _findCharacterSideEffect.send(Unit)
+            }
+
             return
         }
 

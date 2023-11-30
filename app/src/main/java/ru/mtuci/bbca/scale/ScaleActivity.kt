@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import com.otaliastudios.zoom.ZoomImageView
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.mtuci.bbca.R
 import ru.mtuci.bbca.app_logger.CrashLogger
@@ -109,6 +110,13 @@ class ScaleActivity : AppCompatActivity(),
                                 putExtra(MainActivity.TASK_DONE_KEY, Task.SCALE)
                             }
                         )
+                    }
+                }
+
+                launch {
+                    viewModel.findCharacterSideEffect.collect {
+                        Toast.makeText(this@ScaleActivity, R.string.find_character, Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             }
