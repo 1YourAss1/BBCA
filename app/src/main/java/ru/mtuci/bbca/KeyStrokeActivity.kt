@@ -2,12 +2,13 @@ package ru.mtuci.bbca
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.text.InputFilter
 import android.text.Spanned
+import android.text.TextWatcher
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.doOnTextChanged
 import ru.mtuci.bbca.app_logger.CrashLogger
 import ru.mtuci.bbca.data.Preferences
 import ru.mtuci.bbca.data.Task
@@ -68,25 +69,67 @@ class KeyStrokeActivity : AppCompatActivity() {
             }
         )
 
-        editTextKeystroke.doOnTextChanged { text, start, before, count ->
-            textViewKeystroke.text = "${getString(R.string.keystroke_task)} ${if(text?.length!! <= 100) text?.length!! else 100}/100"
-            if (before == 1) {
-                userActivityDataWriter.writeActivity(
-                    listOf(System.currentTimeMillis(), resources.configuration.orientation, "8")
-                )
-            }
-            if (count == 1) {
-                userActivityDataWriter.writeActivity(
-                    listOf(System.currentTimeMillis(), resources.configuration.orientation, text.last().code)
-                )
-            }
-            if (text.length >= 100) {
-                sendBroadcast(
-                    Intent(MainActivity.TASK_DONE_KEY).apply {
-                        putExtra(MainActivity.TASK_DONE_KEY, Task.KEY_STROKE)
+        editTextKeystroke.addTextChangedListener(object : TextWatcher {
+            var before = ""
+
+            override fun afterTextChanged(s: Editable?) {
+                val after = s?.toString() ?: ""
+
+                val ascii = when {
+                    after.length < before.length -> 8
+                    else -> {
+                        var newCharIndex = -1
+
+                        for (i in 0 until Integer.max(before.length, after.length)) {
+                            val beforeChar = before.getOrNull(i)
+                            val newChar = after.getOrNull(i)
+
+                            if (beforeChar != newChar) {
+                                newCharIndex = i
+                                break
+                            }
+                        }
+
+                        after.getOrNull(newCharIndex)?.code
                     }
-                )
+                }
+
+                if (ascii != null) {
+                    userActivityDataWriter.writeActivity(
+                        listOf(
+                            System.currentTimeMillis(),
+                            resources.configuration.orientation,
+                            ascii
+                        )
+                    )
+                }
+
+                textViewKeystroke.text = "${getString(R.string.keystroke_task)} ${if(after.length <= 100) after.length else 100}/100"
+
+                if (after.length >= 100) {
+                    sendBroadcast(
+                        Intent(MainActivity.TASK_DONE_KEY).apply {
+                            putExtra(MainActivity.TASK_DONE_KEY, Task.KEY_STROKE)
+                        }
+                    )
+                }
             }
-        }
+
+            override fun beforeTextChanged(
+                text: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+                before = text?.toString() ?: ""
+            }
+
+            override fun onTextChanged(
+                text: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) = Unit
+        })
     }
 }
