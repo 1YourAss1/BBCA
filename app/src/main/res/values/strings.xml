@@ -17,6 +17,7 @@
     <string name="swipe_task">Пролистайте картинки: %1$d/50</string>
     <string name="swipe_like_task">Лайкайте понравившиеся двойным кликом: %1$d/20</string>
     <string name="scale_task">Найдите персонажей (нажмите на текст, чтобы продолжить): %1$s %2$d/%3$d</string>
+    <string name="find_character">Найдите персонажа</string>
     <string name="click_task">Нажмите на все кнопки</string>
     <string name="video_task">Перемотайте всю рекламу в видео</string>
     <string name="long_click_task">Удалите все элементы посредством длительного нажатия: %1$d/10</string>
