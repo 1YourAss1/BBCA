@@ -1,6 +1,7 @@
 package ru.mtuci.bbca.scale
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -15,6 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.MutableCreationExtras
+import com.bumptech.glide.Glide
 import com.otaliastudios.zoom.ZoomImageView
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -79,7 +81,9 @@ class ScaleActivity : AppCompatActivity(),
 
         setContentView(R.layout.activity_scale)
 
-        imageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.scale))
+        Glide.with(this)
+            .load(Uri.parse("file:///android_asset/scale.jpg"))
+            .into(imageView)
 
         progressView.setOnClickListener {
             viewModel.onCharacterClick()
