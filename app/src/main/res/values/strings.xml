@@ -16,7 +16,7 @@
     <string name="scroll_task">Прочитайте тест до конца</string>
     <string name="swipe_task">Пролистайте картинки: %1$d/50</string>
     <string name="swipe_like_task">Лайкайте понравившиеся двойным кликом: %1$d/20</string>
-    <string name="scale_task">Найдите персонажей (нажмите на текст, чтобы продолжить): %1$s %2$d/%3$d</string>
+    <string name="scale_task">Найдите персонажей (нажмите на персонажа, чтобы продолжить): %1$s %2$d/%3$d</string>
     <string name="find_character">Найдите персонажа</string>
     <string name="click_task">Нажмите на все кнопки</string>
     <string name="video_task">Перемотайте всю рекламу в видео</string>
@@ -53,28 +53,28 @@
     <string name="temperature">Temperature</string>
     <string name="pressure">Pressure</string>
     <string name="humidity">Humidity</string>
-    <string-array name="characters">
-        <item>Уолли (Где Уолли?)</item>
-        <item>Бэтмен (DC)</item>
-        <item>Робин (DC)</item>
-        <item>Саб-Зиро (Mortal Kombat)</item>
-        <item>Скорпион (Mortal Kombat)</item>
-        <item>Штурмовики (Звездные войны)</item>
-        <item>Финн (Время приключений)</item>
-        <item>Гарри Поттер</item>
-        <item>Мегамозг</item>
-        <item>Капитан Америка (Marvel)</item>
-        <item>Волт-Бой (Fallout)</item>
-        <item>Человек-Паук (Marvel)</item>
-        <item>Суперсемейка</item>
-        <item>Дедпул (Marvel)</item>
-        <item>Шерлок Холмс (Шерлок)</item>
-        <item>Зойберг (Футурама)</item>
-        <item>Халк (Marvel)</item>
-        <item>Джокер (Тёмный рыцарь)</item>
-        <item>Царь Леонид (300 спартанцев)</item>
-        <item>Флэш (DC)</item>
-    </string-array>
+
+    <string name="character_wally">Уолли (Где Уолли?)</string>
+    <string name="character_batman">Бэтмен (DC)</string>
+    <string name="character_robin">Робин (DC)</string>
+    <string name="character_subzero">Саб-Зиро (Mortal Kombat)</string>
+    <string name="character_scorpion">Скорпион (Mortal Kombat)</string>
+    <string name="character_stormtroopers">Штурмовики (Звездные войны)</string>
+    <string name="character_finn">Финн (Время приключений)</string>
+    <string name="character_harry">Гарри Поттер</string>
+    <string name="character_megabrain">Мегамозг</string>
+    <string name="character_captain_america">Капитан Америка (Marvel)</string>
+    <string name="character_waltboy">Волт-Бой (Fallout)</string>
+    <string name="character_spider_man">Человек-Паук (Marvel)</string>
+    <string name="character_super_family">Суперсемейка</string>
+    <string name="character_deadpool">Дедпул (Marvel)</string>
+    <string name="character_chief">Мастер Чиф (Halo)</string>
+    <string name="character_zoidberg">Зойберг (Футурама)</string>
+    <string name="character_hulk">Халк (Marvel)</string>
+    <string name="character_joker">Джокер (Тёмный рыцарь)</string>
+    <string name="character_leonid">Царь Леонид (300 спартанцев)</string>
+    <string name="character_flash">Флэш (DC)</string>
+
     <string name="ok">ОК</string>
     <string name="identifier_hint">Придумайте идентификатор</string>
     <string name="identifier_repeat_hint">Повторите идентификатор</string>
