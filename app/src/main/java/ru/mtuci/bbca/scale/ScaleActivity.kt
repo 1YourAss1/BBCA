@@ -1,38 +1,31 @@
 package ru.mtuci.bbca.scale
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.view.GestureDetector
 import android.view.MotionEvent
-import android.view.ScaleGestureDetector
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.view.GestureDetectorCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.MutableCreationExtras
-import com.bumptech.glide.Glide
-import com.otaliastudios.zoom.ZoomImageView
-import kotlinx.coroutines.flow.collect
+import com.davemorrissey.labs.subscaleview.ImageSource
 import kotlinx.coroutines.launch
 import ru.mtuci.bbca.R
 import ru.mtuci.bbca.app_logger.CrashLogger
 import ru.mtuci.bbca.data.Preferences
 import ru.mtuci.bbca.data.Task
 import ru.mtuci.bbca.main.MainActivity
+import ru.mtuci.bbca.scale.overlay_image_view.OverlayImageView
+import ru.mtuci.bbca.scale.overlay_image_view.OverlayItem
 import ru.mtuci.bbca.sensors_data_writer.sensorsDataWriter
 import ru.mtuci.bbca.sensors_data_writer.userActivityDataWriter
 
-class ScaleActivity : AppCompatActivity(),
-    ScaleGestureDetector.OnScaleGestureListener by ScaleGestureDetector.SimpleOnScaleGestureListener(),
-    GestureDetector.OnGestureListener by GestureDetector.SimpleOnGestureListener() {
+class ScaleActivity : AppCompatActivity() {
 
-    private val imageView: ZoomImageView by lazy(LazyThreadSafetyMode.NONE) {
+    private val imageView: OverlayImageView by lazy(LazyThreadSafetyMode.NONE) {
         findViewById(R.id.zoomageView)
     }
 
@@ -49,25 +42,21 @@ class ScaleActivity : AppCompatActivity(),
         )
     }
 
+    private val characters by lazy(LazyThreadSafetyMode.NONE) {
+        CharactersProvider.provide(resources)
+    }
+
     private val viewModel: ScaleViewModel by viewModels(
         extrasProducer = {
             MutableCreationExtras().apply {
                 set(
                     key = ScaleViewModel.CharactersKey,
-                    t = resources.getStringArray(R.array.characters).asList()
+                    t = characters
                 )
             }
         },
         factoryProducer = { ScaleViewModel.factory }
     )
-
-    private val scaleGestureDetector: ScaleGestureDetector by lazy(LazyThreadSafetyMode.NONE) {
-        ScaleGestureDetector(this, this)
-    }
-
-    private val gestureDetector by lazy(LazyThreadSafetyMode.NONE) {
-        GestureDetectorCompat(this, this)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,12 +70,14 @@ class ScaleActivity : AppCompatActivity(),
 
         setContentView(R.layout.activity_scale)
 
-        Glide.with(this)
-            .load(Uri.parse("file:///android_asset/scale.jpg"))
-            .into(imageView)
+        imageView.setImage(ImageSource.asset("scale.jpg"))
 
-        progressView.setOnClickListener {
-            viewModel.onCharacterClick()
+        imageView.maxScale = 10f
+        imageView.minScale = 1f
+        imageView.items = viewModel.characters
+
+        imageView.setOverlayItemsOnClickListener { items ->
+            viewModel.onCharacterClick(items)
         }
 
         lifecycleScope.launch {
@@ -95,12 +86,20 @@ class ScaleActivity : AppCompatActivity(),
                     viewModel.progress.collect { (index, character) ->
                         progressView.text = getString(
                             R.string.scale_task,
-                            character ?: "",
+                            character?.name ?: "",
                             index,
                             viewModel.characters.size
                         )
 
-                        imageView.zoomTo(1.0F, true)
+                        imageView.debugHighlightedItemId = character?.id
+
+                        if (index != 0) {
+                            imageView.triggerRipple()
+                        }
+
+                        if (imageView.isReady) {
+                            imageView.animateScaleAndCenter(imageView.minScale, imageView.center)?.start()
+                        }
                     }
                 }
 
@@ -116,44 +115,11 @@ class ScaleActivity : AppCompatActivity(),
                         )
                     }
                 }
-
-                launch {
-                    viewModel.findCharacterSideEffect.collect {
-                        Toast.makeText(this@ScaleActivity, R.string.find_character, Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }
             }
         }
     }
 
-    override fun onScale(detector: ScaleGestureDetector): Boolean {
-        if (imageView.zoom > 1) {
-            viewModel.onLookupLocationChanged()
-        }
-
-        return false
-    }
-
-    override fun onScroll(
-        e1: MotionEvent?,
-        e2: MotionEvent,
-        distanceX: Float,
-        distanceY: Float
-    ): Boolean {
-        if (e2.pointerCount == 2 && imageView.zoom > 1) {
-            viewModel.onLookupLocationChanged()
-        }
-
-        return false
-    }
-
     override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
-        if (event != null) {
-            scaleGestureDetector.onTouchEvent(event)
-            gestureDetector.onTouchEvent(event)
-        }
-
         when (event?.actionMasked) {
             MotionEvent.ACTION_POINTER_DOWN -> {
                 userActivityDataWriter.writeActivity(

@@ -18,26 +18,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.otaliastudios.zoom.ZoomImageView
+    <ru.mtuci.bbca.scale.overlay_image_view.OverlayImageView
         android:id="@+id/zoomageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:flingEnabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewFindCharacter"
-        app:maxZoom="10"
-        app:minZoom="1"
-        app:oneFingerScrollEnabled="false"
-        app:overPinchable="false"
-        app:overScrollHorizontal="false"
-        app:overScrollVertical="false"
-        app:threeFingersScrollEnabled="false"
-        app:transformation="centerInside"
-        app:transformationGravity="auto"
-        app:twoFingersScrollEnabled="true"
-        tools:src="@drawable/scale" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewFindCharacter" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

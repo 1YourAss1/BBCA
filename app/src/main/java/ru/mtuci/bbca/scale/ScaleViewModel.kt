@@ -12,19 +12,15 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.mtuci.bbca.scale.overlay_image_view.OverlayItem
 
 class ScaleViewModel(
-    val characters: List<String>
+    val characters: List<OverlayItem>
 ) : ViewModel() {
     private val _progress = MutableStateFlow(0)
 
     private val _taskDoneSideEffect = Channel<Unit>(Channel.BUFFERED)
     val taskDoneSideEffect = _taskDoneSideEffect.receiveAsFlow()
-
-    private val _findCharacterSideEffect = Channel<Unit>(Channel.BUFFERED)
-    val findCharacterSideEffect = _findCharacterSideEffect.receiveAsFlow()
-
-    private var isLookupLocationChanged: Boolean = false
 
     val progress = _progress.map { index ->
         index to characters.getOrNull(index)
@@ -34,16 +30,8 @@ class ScaleViewModel(
         initialValue = _progress.value to characters.getOrNull(_progress.value)
     )
 
-    fun onLookupLocationChanged() {
-        isLookupLocationChanged = true
-    }
-
-    fun onCharacterClick() {
-        if (!isLookupLocationChanged) {
-            viewModelScope.launch {
-                _findCharacterSideEffect.send(Unit)
-            }
-
+    fun onCharacterClick(items: List<OverlayItem>) {
+        if (!items.contains(characters.getOrNull(_progress.value))) {
             return
         }
 
@@ -52,7 +40,6 @@ class ScaleViewModel(
         }
 
         _progress.value += 1
-        isLookupLocationChanged = false
 
         if (_progress.value == characters.size) {
             viewModelScope.launch {
@@ -61,7 +48,7 @@ class ScaleViewModel(
         }
     }
 
-    object CharactersKey : CreationExtras.Key<List<String>>
+    object CharactersKey : CreationExtras.Key<List<OverlayItem>>
 
     companion object {
         val factory get() = viewModelFactory {
